@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget;
+package budgetapp.napkkk.ourbudget2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("budgetapp.napkkk.ourbudget", appContext.getPackageName());
+        assertEquals("budgetapp.napkkk.ourbudget2", appContext.getPackageName());
     }
 }

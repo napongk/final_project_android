@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget;
+package budgetapp.napkkk.ourbudget2;
 
 import org.junit.Test;
 
