@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="budgetapp.napkkk.ourbudget2">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,13 +19,24 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1891504340889807"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1891504340889807"
             android:exported="true" />
 
-
+        <activity
+            android:name=".OnGroupActivity"
+            android:label="@string/title_activity_on_group"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddGroupActivity" />
+        <activity
+            android:name=".InGroupActivity"
+            android:label="@string/title_activity_in_group"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
