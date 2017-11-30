@@ -1,6 +1,8 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -18,34 +20,60 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import budgetapp.napkkk.ourbudget2.R;
 
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-    TextView status;
+//    TextView status;
+    TextView nameLogin, emailLogin, genderLogin;
     CallbackManager callbackManager;
     Button doLogin;
+    ProfileTracker profileTracker;
+    ProfilePictureView profilePictureView;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         final Intent intent = new Intent(MainActivity.this, OnGroupActivity.class);
+
+        sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sp.edit();
+
         doLogin = findViewById(R.id.docontinue);
+
+//        nameLogin = findViewById(R.id.nameLogin);
+//        emailLogin = findViewById(R.id.emailLogin);
+//        genderLogin = findViewById(R.id.genderLogin);
+        profilePictureView = findViewById(R.id.imageLogin2);
+
+
+        ///// Login อยู่ ///////////////
 
         if (AccessToken.getCurrentAccessToken() != null){
             Toast.makeText(MainActivity.this, "Already Logged in", Toast.LENGTH_SHORT).show();
             doLogin.setEnabled(true);
             startActivity(intent);
         }
+        ////// ยังไม่ได้ Login ///////////
         else{
             doLogin.setEnabled(false);
         }
@@ -66,18 +94,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loginButton = findViewById(R.id.login_button);
-        status = findViewById(R.id.textView);
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v("Main", response.toString());
+                        try {
+                            editor.putString("name", object.getString("name").toString());
+                            editor.putString("imageid", object.getString("id").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        editor.commit();
+                        setProfileToView(object);
+                    }
+                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+
 
                 Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
-                status.setText("Login Success \n" + loginResult.getAccessToken().getUserId() + "\n" + loginResult.getAccessToken().getToken());
+//                status.setText("Login Success \n" + loginResult.getAccessToken().getUserId() + "\n" + loginResult.getAccessToken().getToken());
 
 
-                startActivity(intent);
+//                startActivity(intent);
 
             }
 
@@ -106,5 +153,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void setProfileToView(JSONObject jsonObject) {
+        try {
+//            emailLogin.setText(jsonObject.getString("email"));
+//            emailLogin.setText("eiei");
+//            genderLogin.setText(jsonObject.getString("gender"));
+//            nameLogin.setText(jsonObject.getString("name"));
+            String dummy = jsonObject.getString("email");
+
+            profilePictureView.setPresetSize(ProfilePictureView.NORMAL);
+            profilePictureView.setProfileId(sp.getString("imageid","null"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

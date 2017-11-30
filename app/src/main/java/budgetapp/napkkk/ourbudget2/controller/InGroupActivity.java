@@ -34,9 +34,9 @@ import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.R;
 import budgetapp.napkkk.ourbudget2.model.TransactionDao;
 import budgetapp.napkkk.ourbudget2.controller.adapter.SectionPageAdapter;
-import budgetapp.napkkk.ourbudget2.tabfragment.EXPENSE_fragment;
-import budgetapp.napkkk.ourbudget2.tabfragment.HISTORY_fragment;
-import budgetapp.napkkk.ourbudget2.tabfragment.INCOME_fragment;
+import budgetapp.napkkk.ourbudget2.view.tabfragment.EXPENSE_fragment;
+import budgetapp.napkkk.ourbudget2.view.tabfragment.HISTORY_fragment;
+import budgetapp.napkkk.ourbudget2.view.tabfragment.INCOME_fragment;
 
 public class InGroupActivity extends AppCompatActivity {
 
@@ -87,6 +87,7 @@ public class InGroupActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 

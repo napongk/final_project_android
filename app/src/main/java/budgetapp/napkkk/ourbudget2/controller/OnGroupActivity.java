@@ -1,7 +1,9 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +36,13 @@ import budgetapp.napkkk.ourbudget2.R;
 public class OnGroupActivity extends AppCompatActivity {
     TextView edit_timeFrom, edit_timeTo;
     EditText edit_groupname, edit_description, edit_money;
-    LinearLayout edit_form;
+    LinearLayout edit_form, profilelayout;
     DatabaseReference databaseReference;
     List<GroupDao> group;
     GroupAdapter adapter;
     ListView listView;
-    RecyclerView recyclerView;
+    ProfilePictureView profilePictureView;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class OnGroupActivity extends AppCompatActivity {
         listView = findViewById(R.id.groupListView);
         group = new ArrayList<>();
 
-        getSupportActionBar().setTitle("กลุ่มของคุณ");
+//        getSupportActionBar().setTitle("กลุ่มของคุณ");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,7 @@ public class OnGroupActivity extends AppCompatActivity {
 
         initFirebase();
         showData();
+        getFBProfile();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -185,5 +191,40 @@ public class OnGroupActivity extends AppCompatActivity {
         }
         databaseReference.child("Group_List").child(dao.getGroupid()).child("name").setValue(group_name);
         databaseReference.child("Group_List").child(dao.getGroupid()).child("time").setValue(timeform);
+    }
+
+    private void getFBProfile(){
+        profilePictureView = findViewById(R.id.imageLogin2);
+        profilelayout = findViewById(R.id.profilelayout);
+
+        sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
+        TextView testjson = findViewById(R.id.testjson);
+        testjson.setText(sp.getString("name", "null"));
+        profilePictureView.setPresetSize(ProfilePictureView.NORMAL);
+        profilePictureView.setProfileId(sp.getString("imageid", "null"));
+
+    }
+
+    public void logout(View view) {
+        logoutDialog();
+    }
+
+    private void logoutDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout ?");
+        builder.setPositiveButton("ออกจากระบบ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                LoginManager.getInstance().logOut();
+                finish();
+            }
+        });
+        builder.setNegativeButton("ไม่", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 }

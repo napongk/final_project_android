@@ -31,18 +31,14 @@
         <activity
             android:name=".controller.OnGroupActivity"
             android:label="@string/title_activity_on_group"
-            android:theme="@style/AppTheme"
-            />
-
-        <activity android:name=".controller.AddGroupActivity"
-            android:parentActivityName=".controller.OnGroupActivity"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".controller.AddGroupActivity"
+            android:parentActivityName=".controller.OnGroupActivity" />
         <activity
             android:name=".controller.InGroupActivity"
             android:label="@string/title_activity_in_group"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
     </application>
 
 </manifest>
