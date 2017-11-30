@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ourBudget2</string>
+    <string name="app_name">ourBudget</string>
     <string name="facebook_app_id">1891504340889807</string>
     <string name="title_activity_on_group">OnGroupActivity</string>
     <string name="title_activity_in_group">InGroupActivity</string>
