@@ -1,5 +1,6 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.view;
 
+import budgetapp.napkkk.ourbudget2.R;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

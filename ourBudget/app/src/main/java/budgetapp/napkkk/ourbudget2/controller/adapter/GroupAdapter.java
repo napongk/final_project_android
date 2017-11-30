@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller.adapter;
 
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.List;
+
+import budgetapp.napkkk.ourbudget2.model.GroupDao;
+import budgetapp.napkkk.ourbudget2.view.OnGroup_View;
 
 /**
  * Created by napkkk on 22/11/2560.

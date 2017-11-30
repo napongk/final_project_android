@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

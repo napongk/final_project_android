@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -23,6 +23,8 @@ import com.facebook.login.widget.LoginButton;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import budgetapp.napkkk.ourbudget2.R;
 
 public class MainActivity extends AppCompatActivity {
 

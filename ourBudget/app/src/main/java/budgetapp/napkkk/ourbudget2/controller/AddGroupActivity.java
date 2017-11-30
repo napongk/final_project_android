@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller;
 
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -22,11 +22,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import budgetapp.napkkk.ourbudget2.model.GroupDao;
+import budgetapp.napkkk.ourbudget2.R;
+
 public class AddGroupActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     Calendar now;
     TextView datetext;
     Button datepick;
-    EditText groupName, startMoney, targetMoney;
+    EditText groupName, startMoney, targetMoney, descritpion_text;
     CheckBox income,expense,target,time;
     String typeChosen,targetStat,timeStat,textDate;
     List group;
@@ -41,6 +44,8 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
         initInstances();
         initFirebase();
 
+        getSupportActionBar().setTitle("เพิ่มกลุ่ม");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         datepick.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -73,6 +78,7 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
         groupName = findViewById(R.id.groupName);
         startMoney = findViewById(R.id.startmoney_amount);
         targetMoney = findViewById(R.id.targetmoney_amount);
+        descritpion_text = findViewById(R.id.description_text);
 
         datepick = findViewById(R.id.pickdate);
 
@@ -136,6 +142,7 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
             groupDB.setTime(timeStat);
             groupDB.setOwner("TEST");
             groupDB.setType(typeChosen);
+            groupDB.setDescription(descritpion_text.getText().toString());
 
 
             databaseReference.child("Group_List").child(id).setValue(groupDB);

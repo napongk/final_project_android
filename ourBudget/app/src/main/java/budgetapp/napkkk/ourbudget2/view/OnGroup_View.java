@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import budgetapp.napkkk.ourbudget2.R;
 
 /**
  * Created by napkkk on 22/11/2560.
@@ -39,7 +41,7 @@ public class OnGroup_View extends FrameLayout{
     }
 
     public void initInflate(){
-        inflate(getContext(),R.layout.ongroup_item,this);
+        inflate(getContext(), R.layout.ongroup_item,this);
     }
 
     private void initInstances() {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/editgroupname"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@android:color/darker_gray"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#FFFFFF"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editdescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@mipmap/description"
+        android:ems="10"
+        android:hint="คำบรรยาย..."
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/editmoney"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@mipmap/targetmoney"
+        android:hint="จำนวนเงินเป้าหมาย"
+        android:inputType="number" />
+
+    <LinearLayout
+        android:id="@+id/timeedit_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:drawableStart="@mipmap/targettime"
+            android:gravity="center_vertical"
+            android:text="From :" />
+
+        <TextView
+            android:id="@+id/editTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="57dp"
+            android:text="To :" />
+    </LinearLayout>
+
+</LinearLayout>

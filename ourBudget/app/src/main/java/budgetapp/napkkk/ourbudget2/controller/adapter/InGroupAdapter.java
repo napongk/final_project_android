@@ -1,4 +1,4 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller.adapter;
 
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.List;
+
+import budgetapp.napkkk.ourbudget2.view.InGroup_View;
+import budgetapp.napkkk.ourbudget2.model.TransactionDao;
 
 /**
  * Created by napkkk on 25/11/2560.
@@ -48,7 +51,7 @@ public class InGroupAdapter extends BaseAdapter {
         TransactionDao dao = ingroup.get(i);
 
         item.setTvDescription(dao.getDescription());
-        item.setTvCost(dao.getMoney());
+        item.setTvCost("฿ " + dao.getMoney());
         item.setVisibilty(dao.getType());
 
         return item;

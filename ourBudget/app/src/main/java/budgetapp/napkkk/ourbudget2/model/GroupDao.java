@@ -1,11 +1,11 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.model;
 
 /**
  * Created by napkkk on 21/11/2560.
  */
 
 public class GroupDao {
-    private String groupid, type, name, time, owner, money, target;
+    private String groupid, type, name, time, owner, money, target, description;
 
     public String getGroupid() {
         return groupid;
@@ -61,5 +61,13 @@ public class GroupDao {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

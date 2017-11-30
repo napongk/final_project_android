@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,14 +29,20 @@
             android:exported="true" />
 
         <activity
-            android:name=".OnGroupActivity"
+            android:name=".controller.OnGroupActivity"
             android:label="@string/title_activity_on_group"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddGroupActivity" />
+            android:theme="@style/AppTheme"
+            />
+
+        <activity android:name=".controller.AddGroupActivity"
+            android:parentActivityName=".controller.OnGroupActivity"/>
+
         <activity
-            android:name=".InGroupActivity"
+            android:name=".controller.InGroupActivity"
             android:label="@string/title_activity_in_group"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
     </application>
 
 </manifest>

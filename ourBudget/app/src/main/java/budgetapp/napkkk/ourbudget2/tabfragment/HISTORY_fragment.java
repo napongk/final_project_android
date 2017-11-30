@@ -1,12 +1,12 @@
 package budgetapp.napkkk.ourbudget2.tabfragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,9 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import budgetapp.napkkk.ourbudget2.InGroupAdapter;
+import budgetapp.napkkk.ourbudget2.controller.adapter.InGroupAdapter;
 import budgetapp.napkkk.ourbudget2.R;
-import budgetapp.napkkk.ourbudget2.TransactionDao;
+import budgetapp.napkkk.ourbudget2.model.TransactionDao;
 
 /**
  * Created by napkkk on 24/11/2560.
@@ -33,12 +33,18 @@ public class HISTORY_fragment extends android.support.v4.app.Fragment {
     List<TransactionDao> transaction;
     InGroupAdapter adapter;
     ListView listView;
+    String ingroupid;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.history_fragment,container,false);
+
+        Bundle bundle = getArguments();
+        ingroupid = bundle.getString("ingroupid");
+        Toast.makeText(getContext(), "fragment : " + ingroupid, Toast.LENGTH_SHORT).show();
+
         transaction = new ArrayList<>();
         listView = view.findViewById(R.id.ingroup_listview);
         initFirebase();
@@ -48,14 +54,16 @@ public class HISTORY_fragment extends android.support.v4.app.Fragment {
     }
 
     private void showData() {
-        Query query = databaseReference.child("Transaction");
+        Query query = databaseReference.child("Transaction").orderByChild("type").equalTo("history");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 transaction.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
-                    transaction.add(dao);
+                    if(postSnapshot.getValue(TransactionDao.class).getIngroupid().equals(ingroupid)){
+                        TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
+                        transaction.add(dao);
+                    }
                 }
                 adapter = new InGroupAdapter(transaction);
                 listView.setAdapter(adapter);

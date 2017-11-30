@@ -1,7 +1,8 @@
-package budgetapp.napkkk.ourbudget2;
+package budgetapp.napkkk.ourbudget2.controller;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
@@ -10,9 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,21 +30,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import budgetapp.napkkk.ourbudget2.model.GroupDao;
+import budgetapp.napkkk.ourbudget2.R;
+import budgetapp.napkkk.ourbudget2.model.TransactionDao;
+import budgetapp.napkkk.ourbudget2.controller.adapter.SectionPageAdapter;
 import budgetapp.napkkk.ourbudget2.tabfragment.EXPENSE_fragment;
 import budgetapp.napkkk.ourbudget2.tabfragment.HISTORY_fragment;
 import budgetapp.napkkk.ourbudget2.tabfragment.INCOME_fragment;
 
 public class InGroupActivity extends AppCompatActivity {
 
+    private String selected;
+
+    INCOME_fragment income_fragment;
+    EXPENSE_fragment expense_fragment;
+    HISTORY_fragment history_fragment;
+    Bundle bundle;
     DatabaseReference databaseReference;
     List<GroupDao> group;
-    TextView currentmoney, goalmoney, moneybound, spaceshow, goalshow, description, timeshow;
+    TextView currentmoney, goalmoney, moneybound, spaceshow, goalshow, description, timeshow, dialog_banner;
     EditText add_descript, add_money;
     LinearLayout timesection;
     Toolbar toolbar;
     GroupDao dao;
     SectionPageAdapter adapter;
     AlertDialog.Builder alert;
+    TabLayout tabLayout;
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +106,7 @@ public class InGroupActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         group = new ArrayList<>();
+        bundle = new Bundle();
 
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
 
@@ -117,29 +128,61 @@ public class InGroupActivity extends AppCompatActivity {
         });
     }
 
+    private void setupFragment() {
+        bundle.putString("ingroupid", dao.getGroupid());
+        income_fragment = new INCOME_fragment();
+        income_fragment.setArguments(bundle);
+        expense_fragment = new EXPENSE_fragment();
+        expense_fragment.setArguments(bundle);
+        history_fragment = new HISTORY_fragment();
+        history_fragment.setArguments(bundle);
+    }
+
+
     private void setupViewPager() {
-        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = findViewById(R.id.container);
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        final SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+        mViewPager = findViewById(R.id.container);
+        tabLayout = findViewById(R.id.tabs);
+        setupFragment();
+
 
         switch (dao.getType()) {
             case "income":
-                adapter.addFragment(new INCOME_fragment(), "INCOME");
-                adapter.addFragment(new HISTORY_fragment(), "HISTORY");
+                adapter.addFragment(income_fragment, "income");
+                adapter.addFragment(history_fragment, "history");
                 break;
             case "expense":
-                adapter.addFragment(new EXPENSE_fragment(), "EXPENSE");
-                adapter.addFragment(new HISTORY_fragment(), "HISTORY");
+                adapter.addFragment(expense_fragment, "expense");
+                adapter.addFragment(history_fragment, "history");
                 break;
             case "both":
-                adapter.addFragment(new INCOME_fragment(), "INCOME");
-                adapter.addFragment(new EXPENSE_fragment(), "EXPENSE");
-                adapter.addFragment(new HISTORY_fragment(), "HISTORY");
+                adapter.addFragment(income_fragment, "income");
+                adapter.addFragment(expense_fragment, "expense");
+                adapter.addFragment(history_fragment, "history");
                 break;
         }
 
         mViewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(mViewPager);
+        selected = String.valueOf(adapter.getPageTitle(0));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selected = String.valueOf(adapter.getPageTitle(tab.getPosition()));
+                Toast.makeText(InGroupActivity.this, selected, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
@@ -183,21 +226,37 @@ public class InGroupActivity extends AppCompatActivity {
         goalmoney.setText(dao.getTarget());
         timeshow.setText(dao.getTime());
 
+        if(dao.getDescription().isEmpty()){
+            description.setVisibility(View.GONE);
+        }
+        else {
+            description.setText(dao.getDescription());
+        }
+
     }
 
     private void showAddDialog(View mView){
         alert = new AlertDialog.Builder(InGroupActivity.this);
         mView = getLayoutInflater().inflate(R.layout.dialog_addtrans, null);
+        dialog_banner = mView.findViewById(R.id.dialog_banner);
         add_descript = mView.findViewById(R.id.adddescript);
         add_money = mView.findViewById(R.id.addmoney);
+
+        if(selected.equals("income")){
+            dialog_banner.setText("Income Transaction");
+            dialog_banner.setBackgroundColor(Color.parseColor("#FF46A746"));
+        }
+        else{
+            dialog_banner.setText("Expense Transaction");
+            dialog_banner.setBackgroundColor(Color.parseColor("#ff6961"));
+        }
+
         alert.setView(mView)
                 // Add action buttons
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        addGroup(add_descript.getText().toString(), "฿ " + add_money.getText().toString());
-                        Toast.makeText(InGroupActivity.this, add_descript.getText().toString(), Toast.LENGTH_SHORT).show();
-
+                        addTransaction(add_descript.getText().toString(), add_money.getText().toString());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -210,7 +269,7 @@ public class InGroupActivity extends AppCompatActivity {
 
     }
 
-    private void addGroup(String descript, String money) {
+    private void addTransaction(String descript, String money) {
         //checking if the value is provided
         if (!TextUtils.isEmpty(descript)) {
             String id = databaseReference.child("Transaction").push().getKey();
@@ -219,8 +278,8 @@ public class InGroupActivity extends AppCompatActivity {
             transactionDao.setId(id);
             transactionDao.setDescription(descript);
             transactionDao.setMoney(money);
-            transactionDao.setType("income");
-            transactionDao.setIngroupid("id");
+            transactionDao.setType(selected);
+            transactionDao.setIngroupid(dao.getGroupid());
 
             databaseReference.child("Transaction").child(id).setValue(transactionDao);
 
@@ -230,4 +289,32 @@ public class InGroupActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
     }
+
+    public void testQuery2(String grpid, String type, Integer money) {
+        Integer moneyNow,
+                getMoney = Integer.parseInt(dao.getMoney());
+
+        if(type.equals("income")) {
+            moneyNow = getMoney + money;
+        }
+        else{
+            moneyNow = getMoney - money;
+        }
+
+        startCountAnimation(getMoney, moneyNow);
+        databaseReference.child("Group_List").child(grpid).child("money").setValue(moneyNow.toString());
+    }
+
+    private void startCountAnimation(Integer start, Integer stop) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, stop);
+        animator.setDuration(5000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                currentmoney.setText(animation.getAnimatedValue().toString());
+            }
+        });
+        animator.start();
+    }
+
+
 }

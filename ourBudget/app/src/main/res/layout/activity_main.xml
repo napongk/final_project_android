@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FEEAC7"
-    tools:context="budgetapp.napkkk.ourbudget2.MainActivity">
+    tools:context="budgetapp.napkkk.ourbudget2.controller.MainActivity">
 
     <ImageView
         android:id="@+id/imageView"
