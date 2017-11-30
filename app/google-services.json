@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "713979734947",
+    "firebase_url": "https://ourbudget-c2807.firebaseio.com",
+    "project_id": "ourbudget-c2807",
+    "storage_bucket": "ourbudget-c2807.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713979734947:android:f2d64fb1bf891ceb",
+        "android_client_info": {
+          "package_name": "budgetapp.napkkk.ourbudget2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713979734947-8vske3gaul1a4utojptfpcilm3jq9kvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPN--IaWEC0jNc3kWQOWdCl5mv7Ghl48U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
