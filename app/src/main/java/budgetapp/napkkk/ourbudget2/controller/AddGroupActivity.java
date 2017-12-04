@@ -1,5 +1,7 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -24,6 +26,7 @@ import java.util.List;
 
 import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.R;
+import budgetapp.napkkk.ourbudget2.model.UserDao;
 
 public class AddGroupActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     Calendar now;
@@ -34,6 +37,7 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
     String typeChosen,targetStat,timeStat,textDate;
     List group;
     DatabaseReference databaseReference;
+    SharedPreferences sp;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -73,6 +77,8 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void initInstances() {
+        sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
+
         datetext = findViewById(R.id.textDate);
 
         groupName = findViewById(R.id.groupName);
@@ -140,12 +146,19 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
             groupDB.setMoney(startMoney.getText().toString());
             groupDB.setTarget(targetStat);
             groupDB.setTime(timeStat);
-            groupDB.setOwner("TEST");
+            groupDB.setOwner(sp.getString("name","null"));
             groupDB.setType(typeChosen);
             groupDB.setDescription(descritpion_text.getText().toString());
 
+            UserDao userDao = new UserDao();
+            userDao.setUserName(sp.getString("name", "null"));
+            userDao.setUserPic(sp.getString("imageid", "null"));
+
 
             databaseReference.child("Group_List").child(id).setValue(groupDB);
+            databaseReference.child("Group_List").child(id).child("inmember").child(id).setValue(userDao);
+            databaseReference.child("User").child(sp.getString("name","null")).child("own").child(id).setValue(name);
+            databaseReference.child("User").child(sp.getString("name","null")).child("inmember").child(id).setValue(name);
 
             Toast.makeText(this, "Group Added", Toast.LENGTH_LONG).show();
         } else {

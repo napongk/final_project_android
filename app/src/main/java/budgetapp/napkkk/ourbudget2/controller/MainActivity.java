@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +38,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import budgetapp.napkkk.ourbudget2.R;
+import budgetapp.napkkk.ourbudget2.model.GroupDao;
+import budgetapp.napkkk.ourbudget2.model.UserDao;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     ProfileTracker profileTracker;
     ProfilePictureView profilePictureView;
     SharedPreferences sp;
+    SharedPreferences.Editor editor;
+
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(MainActivity.this, OnGroupActivity.class);
 
         sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sp.edit();
+        editor = sp.edit();
+        initFirebase();
 
         doLogin = findViewById(R.id.docontinue);
 
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -106,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             editor.putString("name", object.getString("name").toString());
                             editor.putString("imageid", object.getString("id").toString());
+
+                            addUser(object);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -167,6 +178,31 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initFirebase() {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private void addUser(JSONObject jsonObject) throws JSONException {
+
+        //checking if the value is provided
+        if (!TextUtils.isEmpty(jsonObject.getString("name"))) {
+            String id = databaseReference.child("User").push().getKey();
+
+            editor.putString("loginHash", id);
+
+            UserDao userDao = new UserDao();
+            userDao.setUserName(jsonObject.getString("name"));
+            userDao.setUserPic(jsonObject.getString("id"));
+
+            databaseReference.child("User").child(jsonObject.getString("name")).setValue(userDao);
+
+            Toast.makeText(this, "User Added", Toast.LENGTH_LONG).show();
+        } else {
+            //if the value is not given displaying a toast
+            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
         }
     }
 

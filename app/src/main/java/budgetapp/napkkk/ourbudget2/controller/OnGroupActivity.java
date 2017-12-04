@@ -32,6 +32,7 @@ import java.util.List;
 import budgetapp.napkkk.ourbudget2.controller.adapter.GroupAdapter;
 import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.R;
+import budgetapp.napkkk.ourbudget2.model.TransactionDao;
 
 public class OnGroupActivity extends AppCompatActivity {
     TextView edit_timeFrom, edit_timeTo;
@@ -39,6 +40,7 @@ public class OnGroupActivity extends AppCompatActivity {
     LinearLayout edit_form, profilelayout;
     DatabaseReference databaseReference;
     List<GroupDao> group;
+    List<TransactionDao> transaction;
     GroupAdapter adapter;
     ListView listView;
     ProfilePictureView profilePictureView;
@@ -51,6 +53,8 @@ public class OnGroupActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.groupListView);
         group = new ArrayList<>();
+        transaction = new ArrayList<>();
+
 
 //        getSupportActionBar().setTitle("กลุ่มของคุณ");
 
@@ -64,8 +68,13 @@ public class OnGroupActivity extends AppCompatActivity {
         });
 
         initFirebase();
-        showData();
         getFBProfile();
+
+        Toast.makeText(OnGroupActivity.this, sp.getString("name","null"), Toast.LENGTH_SHORT).show();
+
+        showData();
+        getTransaction();
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,14 +99,16 @@ public class OnGroupActivity extends AppCompatActivity {
     }
 
     private void showData() {
-        Query query = databaseReference.child("Group_List");
+        Query query = databaseReference.child("Group_List").orderByChild("owner").equalTo(sp.getString("name", "null"));
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 group.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     GroupDao dao = postSnapshot.getValue(GroupDao.class);
                     group.add(dao);
+
                 }
                 adapter = new GroupAdapter(group);
                 listView.setAdapter(adapter);
@@ -125,7 +136,15 @@ public class OnGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(choice[which].equals("ลบ")){
+                    for (TransactionDao transact : transaction) {
+                        if(transact.getIngroupid().equals(dao.getGroupid())){
+                            databaseReference.child("Transaction").child(transact.getId()).removeValue();
+                        }
+                    }
                     databaseReference.child("Group_List").child(dao.getGroupid()).removeValue();
+                    databaseReference.child("User").child(sp.getString("name","null"))
+                            .child("own").child(dao.getGroupid()).removeValue();
+
                 }
                 else{
                     editDialog(view, dao);
@@ -226,5 +245,25 @@ public class OnGroupActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void getTransaction(){
+        Query query = databaseReference.child("Transaction");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                transaction.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
+                    transaction.add(dao);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
     }
 }

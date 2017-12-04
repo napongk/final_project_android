@@ -65,7 +65,7 @@ public class INCOME_fragment extends android.support.v4.app.Fragment{
                 for (int position : reverseSortedPositions) {
                     TransactionDao dao = transaction.get(position);
                     Toast.makeText(getContext(), "delete : " + dao.getDescription(), Toast.LENGTH_SHORT).show();
-                    activity.testQuery2(dao.getIngroupid(), dao.getType(), Integer.parseInt(dao.getMoney()));
+                    activity.moneyChange(dao.getIngroupid(), dao.getType(), Integer.parseInt(dao.getMoney()));
                     databaseReference.child("Transaction").child(dao.getId()).child("type").setValue("history");
 
                     adapter.notifyDataSetChanged();

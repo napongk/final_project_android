@@ -4,13 +4,14 @@
     tools:context="budgetapp.napkkk.ourbudget2.controller.InGroupActivity">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="3"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_member"
         android:icon="@drawable/member"
-        android:title="Member"
-        app:showAsAction="always" />
+        android:orderInCategory="2"
+        app:showAsAction="always"
+        android:title="Member" />
 </menu>

@@ -2,7 +2,9 @@ package budgetapp.napkkk.ourbudget2.controller;
 
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
@@ -48,7 +50,7 @@ public class InGroupActivity extends AppCompatActivity {
     Bundle bundle;
     DatabaseReference databaseReference;
     List<GroupDao> group;
-    TextView currentmoney, goalmoney, moneybound, spaceshow, goalshow, description, timeshow, dialog_banner;
+    TextView currentmoney, goalmoney, moneybound, spaceshow, goalshow, description, timeshow, dialog_banner, membernumber;
     EditText add_descript, add_money;
     LinearLayout timesection;
     Toolbar toolbar;
@@ -75,6 +77,8 @@ public class InGroupActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_in_group, menu);
+        displayMemberAmount();
+        menu.add(Menu.NONE, Menu.NONE, 1, "eiei").setActionView(membernumber).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -86,8 +90,10 @@ public class InGroupActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
+        if (id == R.id.action_member) {
+            Intent intent = new Intent(InGroupActivity.this, ViewMemberActivity.class);
+            intent.putExtra("groupID", catchID());
+            startActivity(intent);
             return true;
         }
 
@@ -108,6 +114,8 @@ public class InGroupActivity extends AppCompatActivity {
 
         group = new ArrayList<>();
         bundle = new Bundle();
+
+        membernumber = new TextView(InGroupActivity.this);
 
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
 
@@ -200,7 +208,7 @@ public class InGroupActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dao = dataSnapshot.getValue(GroupDao.class);
-                Toast.makeText(InGroupActivity.this, dao.getGroupid(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(InGroupActivity.this, dao.getGroupid(), Toast.LENGTH_SHORT).show();
                 setData();
                 setupViewPager();
             }
@@ -291,7 +299,7 @@ public class InGroupActivity extends AppCompatActivity {
         }
     }
 
-    public void testQuery2(String grpid, String type, Integer money) {
+    public void moneyChange(String grpid, String type, Integer money) {
         Integer moneyNow,
                 getMoney = Integer.parseInt(dao.getMoney());
 
@@ -315,6 +323,24 @@ public class InGroupActivity extends AppCompatActivity {
             }
         });
         animator.start();
+    }
+
+    private void displayMemberAmount(){
+        Query query = databaseReference.child("Group_List").child(dao.getGroupid()).child("inmember");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                membernumber.setText(dataSnapshot.getChildrenCount()+"");
+                membernumber.setTextColor(Color.WHITE);
+                membernumber.setTypeface(null, Typeface.BOLD);
+                membernumber.setTextSize(14);
+                Toast.makeText(InGroupActivity.this, dataSnapshot.getChildrenCount()+"", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
 

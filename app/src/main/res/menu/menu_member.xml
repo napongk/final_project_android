@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="budgetapp.napkkk.ourbudget2.controller.ViewMemberActivity">
+
+
+    <item
+        android:id="@+id/action_add_member"
+        android:icon="@drawable/person_add2"
+        android:orderInCategory="2"
+        android:title="Add Member"
+        app:showAsAction="always" />
+</menu>
