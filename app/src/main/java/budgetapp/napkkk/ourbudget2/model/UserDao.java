@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class UserDao {
     private String userName, userPic;
-    private HashMap<String, String> inmember, own;
+    private HashMap<String, String> inmember, own, incharge;
 
 
     public String getUserName() {
@@ -45,4 +45,11 @@ public class UserDao {
     }
 
 
+    public HashMap<String, String> getIncharge() {
+        return incharge;
+    }
+
+    public void setIncharge(HashMap<String, String> incharge) {
+        this.incharge = incharge;
+    }
 }

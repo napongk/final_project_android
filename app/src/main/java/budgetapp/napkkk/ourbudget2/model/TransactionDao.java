@@ -1,5 +1,6 @@
 package budgetapp.napkkk.ourbudget2.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class TransactionDao {
     private String id , ingroupid, description, money, type;
-    private List<String> incharge;
+    private HashMap<String, HashMap<String, String>> incharge;
 
     public String getDescription() {
         return description;
@@ -34,14 +35,6 @@ public class TransactionDao {
         this.type = type;
     }
 
-    public List<String> getIncharge() {
-        return incharge;
-    }
-
-    public void setIncharge(List<String> incharge) {
-        this.incharge = incharge;
-    }
-
     public String getIngroupid() {
         return ingroupid;
     }
@@ -56,5 +49,14 @@ public class TransactionDao {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+
+    public HashMap<String, HashMap<String, String>> getIncharge() {
+        return incharge;
+    }
+
+    public void setIncharge(HashMap<String, HashMap<String, String>> incharge) {
+        this.incharge = incharge;
     }
 }

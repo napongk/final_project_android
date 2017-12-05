@@ -17,8 +17,11 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +34,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import budgetapp.napkkk.ourbudget2.controller.adapter.InchargeAdapter;
 import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.R;
 import budgetapp.napkkk.ourbudget2.model.TransactionDao;
 import budgetapp.napkkk.ourbudget2.controller.adapter.SectionPageAdapter;
+import budgetapp.napkkk.ourbudget2.model.UserDao;
 import budgetapp.napkkk.ourbudget2.view.tabfragment.EXPENSE_fragment;
 import budgetapp.napkkk.ourbudget2.view.tabfragment.HISTORY_fragment;
 import budgetapp.napkkk.ourbudget2.view.tabfragment.INCOME_fragment;
@@ -58,17 +64,23 @@ public class InGroupActivity extends AppCompatActivity {
     GroupDao dao;
     SectionPageAdapter adapter;
     AlertDialog.Builder alert;
+    String transactionId;
     TabLayout tabLayout;
     ViewPager mViewPager;
     DecimalFormat formatter;
+    List<UserDao> userNormal, userInCharge;
+    ListView showIncharge_listview, showAddInchagre_listview;
+    InchargeAdapter inchargeAdapter;
+    Button addinchargeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ingroup_acitivity);
 
-        initInstance();
+
         initFirebase();
+        initInstance();
         getQuery();
 
     }
@@ -114,10 +126,14 @@ public class InGroupActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        userNormal = new ArrayList<>();
+        userInCharge = new ArrayList<>();
         group = new ArrayList<>();
         bundle = new Bundle();
 
         formatter = new DecimalFormat("#,###,###");
+
+
 
         membernumber = new TextView(InGroupActivity.this);
 
@@ -184,7 +200,16 @@ public class InGroupActivity extends AppCompatActivity {
 
             mViewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(mViewPager);
+
             selected = String.valueOf(adapter.getPageTitle(0));
+            switch (selected){
+                case "รายรับ" : selected = "income";
+                    break;
+                case "รายจ่าย" : selected = "expense";
+                    break;
+                case "ประวัติ" : selected = "history";
+                    break;
+            }
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -276,11 +301,20 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void showAddDialog(View mView){
+        transactionId = databaseReference.child("Incharge").push().getKey();
+
+        databaseReference.child("Transaction").child(transactionId).child("ingroupid").setValue(catchID());
+
         alert = new AlertDialog.Builder(InGroupActivity.this);
         mView = getLayoutInflater().inflate(R.layout.dialog_addtrans, null);
         dialog_banner = mView.findViewById(R.id.dialog_banner);
         add_descript = mView.findViewById(R.id.adddescript);
         add_money = mView.findViewById(R.id.addmoney);
+        showIncharge_listview = mView.findViewById(R.id.incharge_person);
+        addinchargeBtn = mView.findViewById(R.id.addincharge_button);
+
+
+        inchargeQuery();
 
         if(selected.equals("income")){
             dialog_banner.setText("Income Transaction");
@@ -301,18 +335,28 @@ public class InGroupActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        databaseReference.child("Transaction").child(String.valueOf(id)).removeValue();
                         dialog.dismiss();
                     }
                 });
+
+        addinchargeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddInchargeDialog(transactionId);
+            }
+        });
+
         alert.create();
         alert.show();
 
     }
 
     private void addTransaction(String descript, String money) {
+        String id = databaseReference.child("Transaction").push().getKey();
+
         //checking if the value is provided
         if (!TextUtils.isEmpty(descript)) {
-            String id = databaseReference.child("Transaction").push().getKey();
 
             TransactionDao transactionDao = new TransactionDao();
             transactionDao.setId(id);
@@ -321,7 +365,7 @@ public class InGroupActivity extends AppCompatActivity {
             transactionDao.setType(selected);
             transactionDao.setIngroupid(dao.getGroupid());
 
-            databaseReference.child("Transaction").child(id).setValue(transactionDao);
+            databaseReference.child("Transaction").child(transactionId).setValue(transactionDao);
 
             Toast.makeText(this, "Transaction added", Toast.LENGTH_LONG).show();
         } else {
@@ -387,6 +431,77 @@ public class InGroupActivity extends AppCompatActivity {
         });
         builder.create();
         builder.show();
+    }
+
+    private void inchargeQuery() {
+        Toast.makeText(InGroupActivity.this, transactionId, Toast.LENGTH_SHORT).show();
+        Query query = databaseReference.child("Transaction").child(transactionId).child("incharge");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userNormal.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserDao userDao = postSnapshot.getValue(UserDao.class);
+                    userNormal.add(userDao);
+                }
+                inchargeAdapter = new InchargeAdapter(userNormal);
+                showIncharge_listview.setAdapter(inchargeAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                finish();
+            }
+        });
+    }
+
+    private void addinchargeQuery() {
+        Query query = databaseReference.child("Group_List").child(catchID()).child("inmember");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userInCharge.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserDao userDao = postSnapshot.getValue(UserDao.class);
+                    userInCharge.add(userDao);
+                }
+                inchargeAdapter = new InchargeAdapter(userInCharge);
+                showAddInchagre_listview.setAdapter(inchargeAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                finish();
+            }
+        });
+    }
+
+    private void showAddInchargeDialog(final String id){
+        alert = new AlertDialog.Builder(InGroupActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_addincharge, null);
+        showAddInchagre_listview = mView.findViewById(R.id.addincharge_person);
+        alert.setView(mView);
+
+        alert.setNegativeButton("กลับ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        addinchargeQuery();
+
+        showAddInchagre_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String id = databaseReference.child("Incharge").push().getKey();
+                databaseReference.child("Transaction").child(transactionId).child("incharge").child(id).child("userName").setValue(userInCharge.get(i).getUserName());
+                databaseReference.child("Transaction").child(transactionId).child("incharge").child(id).child("userPic").setValue(userInCharge.get(i).getUserPic());
+            }
+        });
+
+        alert.show();
+
     }
 
 

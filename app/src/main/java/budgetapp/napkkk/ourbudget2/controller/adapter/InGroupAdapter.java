@@ -53,6 +53,7 @@ public class InGroupAdapter extends BaseAdapter {
         item.setTvDescription(dao.getDescription());
         item.setTvCost("฿ " + dao.getMoney());
         item.setVisibilty(dao.getType());
+        item.setTvPerson(String.valueOf(dao.getIncharge().size()));
 
         return item;
     }
@@ -62,4 +63,5 @@ public class InGroupAdapter extends BaseAdapter {
     public CharSequence[] getAutofillOptions() {
         return new CharSequence[0];
     }
+    
 }
