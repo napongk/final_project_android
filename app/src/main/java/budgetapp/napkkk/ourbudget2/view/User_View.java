@@ -18,7 +18,6 @@ import budgetapp.napkkk.ourbudget2.R;
  */
 
 public class User_View extends FrameLayout {
-    private CheckBox addCheckBox;
     private TextView tvProfilename;
     private ProfilePictureView profilePic;
 
@@ -50,7 +49,6 @@ public class User_View extends FrameLayout {
         tvProfilename = findViewById(R.id.profileName);
         profilePic = findViewById(R.id.profilePic);
         profilePic.setPresetSize(ProfilePictureView.NORMAL);
-        addCheckBox = findViewById(R.id.addCheckBox);
 
     }
 

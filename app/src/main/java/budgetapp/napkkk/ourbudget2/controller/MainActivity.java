@@ -197,7 +197,10 @@ public class MainActivity extends AppCompatActivity {
             userDao.setUserName(jsonObject.getString("name"));
             userDao.setUserPic(jsonObject.getString("id"));
 
+
             databaseReference.child("User").child(jsonObject.getString("name")).setValue(userDao);
+            databaseReference.child("User").child(jsonObject.getString("name")).child("inmember").child("dummy").setValue("dummy");
+            databaseReference.child("User").child(jsonObject.getString("name")).child("own").child("dummy").setValue("dummy");
 
             Toast.makeText(this, "User Added", Toast.LENGTH_LONG).show();
         } else {

@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class InGroupActivity extends AppCompatActivity {
     AlertDialog.Builder alert;
     TabLayout tabLayout;
     ViewPager mViewPager;
+    DecimalFormat formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +117,8 @@ public class InGroupActivity extends AppCompatActivity {
         group = new ArrayList<>();
         bundle = new Bundle();
 
+        formatter = new DecimalFormat("#,###,###");
+
         membernumber = new TextView(InGroupActivity.this);
 
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
@@ -138,60 +142,78 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void setupFragment() {
-        bundle.putString("ingroupid", dao.getGroupid());
-        income_fragment = new INCOME_fragment();
-        income_fragment.setArguments(bundle);
-        expense_fragment = new EXPENSE_fragment();
-        expense_fragment.setArguments(bundle);
-        history_fragment = new HISTORY_fragment();
-        history_fragment.setArguments(bundle);
+//        try {
+            bundle.putString("ingroupid", dao.getGroupid());
+            income_fragment = new INCOME_fragment();
+            income_fragment.setArguments(bundle);
+            expense_fragment = new EXPENSE_fragment();
+            expense_fragment.setArguments(bundle);
+            history_fragment = new HISTORY_fragment();
+            history_fragment.setArguments(bundle);
+//        }
+
+//        catch(Exception e){
+//            errorDialog();
+//        }
     }
 
 
     private void setupViewPager() {
-        final SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(R.id.container);
-        tabLayout = findViewById(R.id.tabs);
-        setupFragment();
+//        try {
+            final SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+            mViewPager = findViewById(R.id.container);
+            tabLayout = findViewById(R.id.tabs);
+            setupFragment();
 
 
-        switch (dao.getType()) {
-            case "income":
-                adapter.addFragment(income_fragment, "income");
-                adapter.addFragment(history_fragment, "history");
-                break;
-            case "expense":
-                adapter.addFragment(expense_fragment, "expense");
-                adapter.addFragment(history_fragment, "history");
-                break;
-            case "both":
-                adapter.addFragment(income_fragment, "income");
-                adapter.addFragment(expense_fragment, "expense");
-                adapter.addFragment(history_fragment, "history");
-                break;
-        }
-
-        mViewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(mViewPager);
-        selected = String.valueOf(adapter.getPageTitle(0));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                selected = String.valueOf(adapter.getPageTitle(tab.getPosition()));
-                Toast.makeText(InGroupActivity.this, selected, Toast.LENGTH_SHORT).show();
+            switch (dao.getType()) {
+                case "income":
+                    adapter.addFragment(income_fragment, "รายรับ");
+                    adapter.addFragment(history_fragment, "ประวัติ");
+                    break;
+                case "expense":
+                    adapter.addFragment(expense_fragment, "รายจ่าย");
+                    adapter.addFragment(history_fragment, "ประวัติ");
+                    break;
+                case "both":
+                    adapter.addFragment(income_fragment, "รายรับ");
+                    adapter.addFragment(expense_fragment, "รายจ่าย");
+                    adapter.addFragment(history_fragment, "ประวัติ");
+                    break;
             }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            mViewPager.setAdapter(adapter);
+            tabLayout.setupWithViewPager(mViewPager);
+            selected = String.valueOf(adapter.getPageTitle(0));
 
-            }
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    switch (String.valueOf(adapter.getPageTitle(tab.getPosition()))){
+                        case "รายรับ" : selected = "income";
+                                     break;
+                        case "รายจ่าย" : selected = "expense";
+                                     break;
+                        case "ประวัติ" : selected = "history";
+                                     break;
+                    }
+                    Toast.makeText(InGroupActivity.this, selected, Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+//        }
+//        catch(Exception e){
+//            errorDialog();
+//        }
 
     }
 
@@ -221,26 +243,35 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        if ("OFF".equals(dao.getTarget())) {
-            goalmoney.setVisibility(View.GONE);
-            moneybound.setVisibility(View.GONE);
-            spaceshow.setVisibility(View.GONE);
-            goalshow.setVisibility(View.GONE);
-        }
-        if ("OFF".equals(dao.getTime())) {
-            timesection.setVisibility(View.GONE);
-        }
-        toolbar.setTitle(dao.getName());
-        currentmoney.setText(dao.getMoney());
-        goalmoney.setText(dao.getTarget());
-        timeshow.setText(dao.getTime());
+//        try {
+            if ("OFF".equals(dao.getTarget())) {
+                goalmoney.setVisibility(View.GONE);
+                moneybound.setVisibility(View.GONE);
+                spaceshow.setVisibility(View.GONE);
+                goalshow.setVisibility(View.GONE);
+            }
+            else{
+                goalmoney.setText(formatter.format(Integer.parseInt(dao.getTarget())));
+            }
 
-        if(dao.getDescription().isEmpty()){
-            description.setVisibility(View.GONE);
-        }
-        else {
-            description.setText(dao.getDescription());
-        }
+            if ("OFF".equals(dao.getTime())) {
+                timesection.setVisibility(View.GONE);
+            }
+            toolbar.setTitle(dao.getName());
+
+            currentmoney.setText(formatter.format(Integer.parseInt(dao.getMoney())));
+
+            timeshow.setText(dao.getTime());
+
+            if (dao.getDescription().isEmpty()) {
+                description.setVisibility(View.GONE);
+            } else {
+                description.setText(dao.getDescription());
+            }
+//        }
+//        catch (Exception e){
+//            errorDialog();
+//        }
 
     }
 
@@ -316,10 +347,10 @@ public class InGroupActivity extends AppCompatActivity {
 
     private void startCountAnimation(Integer start, Integer stop) {
         ValueAnimator animator = ValueAnimator.ofInt(start, stop);
-        animator.setDuration(5000);
+        animator.setDuration(3000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
-                currentmoney.setText(animation.getAnimatedValue().toString());
+                currentmoney.setText(formatter.format(animation.getAnimatedValue()));
             }
         });
         animator.start();
@@ -341,6 +372,21 @@ public class InGroupActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    private void errorDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("เกิดข้อผิดพลาด");
+        builder.setMessage("กลุ่มของคุณโดนลบ");
+
+        builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
 

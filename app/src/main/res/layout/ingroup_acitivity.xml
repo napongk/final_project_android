@@ -52,6 +52,7 @@
                     android:gravity="center"
                     android:text="0"
                     android:textSize="30sp"
+                    android:textStyle="bold"
                     android:visibility="visible" />
 
                 <TextView
@@ -88,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.45"
                     android:gravity="center"
-                    android:text="Current" />
+                    android:text="ตอนนี้" />
 
                 <TextView
                     android:id="@+id/spaceshow"
@@ -103,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.45"
                     android:gravity="center"
-                    android:text="Goal" />
+                    android:text="เป้าหมาย" />
 
             </LinearLayout>
 

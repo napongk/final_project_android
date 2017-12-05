@@ -1,10 +1,13 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +41,7 @@ public class ViewMemberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewmember_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("สมาชิก");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -82,22 +86,22 @@ public class ViewMemberActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                user.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-//                    Toast.makeText(ViewMemberActivity.this, postSnapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
-                    UserDao userDao = postSnapshot.getValue(UserDao.class);
-                    user.add(userDao);
-                }
-                adapter = new UserAdapter(user);
-                listView.setAdapter(adapter);
+                    user.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        UserDao userDao = postSnapshot.getValue(UserDao.class);
+                        user.add(userDao);
+                    }
+                    adapter = new UserAdapter(user);
+                    listView.setAdapter(adapter);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+//                finish();
             }
         });
     }
+
 
     private void initInstance(){
         user = new ArrayList<>();
@@ -108,6 +112,7 @@ public class ViewMemberActivity extends AppCompatActivity {
 
     private void goAddmember(){
         Intent intent = new Intent(ViewMemberActivity.this, AddMemberActivity.class);
+        intent.putExtra("groupID", catchID());
         startActivity(intent);
     }
 

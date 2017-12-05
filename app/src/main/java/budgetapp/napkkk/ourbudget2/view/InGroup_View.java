@@ -2,6 +2,7 @@ package budgetapp.napkkk.ourbudget2.view;
 
 import budgetapp.napkkk.ourbudget2.R;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -63,10 +64,13 @@ public class InGroup_View extends FrameLayout {
     public void setVisibilty(String text){
         switch(text){
             case "income" : incomeicon.setVisibility(VISIBLE);
+                            tvCost.setBackgroundResource(R.drawable.rounded_income);
                             break;
             case "expense" : expenseicon.setVisibility(VISIBLE);
+                            tvCost.setBackgroundResource(R.drawable.rounded_expense);
                             break;
             case "history" : historyicon.setVisibility(VISIBLE);
+                            tvCost.setBackgroundResource(R.drawable.rounded_history);
                             break;
         }
     }

@@ -54,23 +54,30 @@
                     android:gravity="center_vertical"
                     android:text="ซื้อเกาเหลา"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/cost"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/rounded_income"
                     android:gravity="center"
+                    android:paddingEnd="3.5dp"
+                    android:paddingStart="3.5dp"
                     android:text="฿ 4000"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="14sp" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 

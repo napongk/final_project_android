@@ -7,9 +7,7 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
-import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.model.UserDao;
-import budgetapp.napkkk.ourbudget2.view.OnGroup_View;
 import budgetapp.napkkk.ourbudget2.view.User_View;
 
 /**
@@ -19,7 +17,6 @@ import budgetapp.napkkk.ourbudget2.view.User_View;
 public class UserAdapter extends BaseAdapter {
 
     List<UserDao>  user;
-    boolean[] itemChecked;
 
     public UserAdapter(List<UserDao> user){
         this.user = user;
@@ -45,11 +42,15 @@ public class UserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         User_View item;
-        if (view != null)
-        item = (User_View) view;
-        else
-        item = new User_View(viewGroup.getContext());
+        if (view != null) {
+            item = (User_View) view;
+
+        }
+        else {
+            item = new User_View(viewGroup.getContext());
+        }
 
         UserDao dao = user.get(i);
 

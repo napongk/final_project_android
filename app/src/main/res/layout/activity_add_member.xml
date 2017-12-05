@@ -41,37 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#0073ff"
-            android:onClick="addtoggle"
-            android:text="เพิ่มสมาชิก +"
+            android:text="เพิ่มสมาชิกด้วยการกดที่บุคคลที่ต้องการ"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/applymember_button"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:background="#14afe2"
-            android:onClick="addapply"
-            android:text="เพิ่ม"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/cancel_button"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ff1232"
-            android:onClick="cancel"
-            android:text="ยกเลิก"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:ignore="OnClick" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

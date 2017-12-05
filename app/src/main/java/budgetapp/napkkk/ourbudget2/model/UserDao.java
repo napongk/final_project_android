@@ -10,6 +10,7 @@ public class UserDao {
     private String userName, userPic;
     private HashMap<String, String> inmember, own;
 
+
     public String getUserName() {
         return userName;
     }
@@ -32,6 +33,7 @@ public class UserDao {
 
     public void setInmember(HashMap<String, String> inmember) {
         this.inmember = inmember;
+
     }
 
     public HashMap<String, String> getOwn() {
@@ -41,4 +43,6 @@ public class UserDao {
     public void setOwn(HashMap<String, String> own) {
         this.own = own;
     }
+
+
 }
