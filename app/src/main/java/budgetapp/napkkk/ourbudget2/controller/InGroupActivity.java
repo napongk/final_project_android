@@ -366,6 +366,7 @@ public class InGroupActivity extends AppCompatActivity {
             transactionDao.setIngroupid(dao.getGroupid());
 
             databaseReference.child("Transaction").child(transactionId).setValue(transactionDao);
+            Toast.makeText(InGroupActivity.this, "สามารถปัดเลื่อนขวาที่รายการเพื่ออัพเดตข้อมูลได้", Toast.LENGTH_SHORT).show();
 
             Toast.makeText(this, "Transaction added", Toast.LENGTH_LONG).show();
         } else {

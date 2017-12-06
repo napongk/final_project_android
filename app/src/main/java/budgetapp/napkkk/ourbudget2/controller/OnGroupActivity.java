@@ -56,6 +56,8 @@ public class OnGroupActivity extends AppCompatActivity {
         group = new ArrayList<>();
         transaction = new ArrayList<>();
 
+        Toast.makeText(OnGroupActivity.this, "หากชื่อผู้ใช้งานและรูปไม่ขึ้น กรุณาล็อคอินใหม่อีกครั้ง", Toast.LENGTH_SHORT).show();
+
 
 //        getSupportActionBar().setTitle("กลุ่มของคุณ");
 
