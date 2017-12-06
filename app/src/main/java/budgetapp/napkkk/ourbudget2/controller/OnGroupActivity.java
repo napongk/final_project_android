@@ -137,11 +137,6 @@ public class OnGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(choice[which].equals("ลบ")){
-                    for (TransactionDao transact : transaction) {
-                        if(transact.getIngroupid().equals(dao.getGroupid())){
-                            databaseReference.child("Transaction").child(transact.getId()).removeValue();
-                        }
-                    }
                     databaseReference.child("Group_List").child(dao.getGroupid()).removeValue();
                     databaseReference.child("User").child(sp.getString("name","null"))
                             .child("own").child(dao.getGroupid()).removeValue();
@@ -254,10 +249,9 @@ public class OnGroupActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 transaction.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
-                    transaction.add(dao);
-                }
+                TransactionDao dao = dataSnapshot.getValue(TransactionDao.class);
+                transaction.add(dao);
+
             }
 
             @Override

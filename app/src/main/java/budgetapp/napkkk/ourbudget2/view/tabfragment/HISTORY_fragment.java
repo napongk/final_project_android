@@ -54,20 +54,16 @@ public class HISTORY_fragment extends android.support.v4.app.Fragment {
     }
 
     private void showData() {
-        Query query = databaseReference.child("Transaction").orderByChild("ingroupid").equalTo(ingroupid);
+        Query query = databaseReference.child("Transaction").orderByChild("type").equalTo("history");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 transaction.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
-                    transaction.add(dao);
-////                    if(postSnapshot.getValue(TransactionDao.class).getType().equals(ingroupid)){
-//                        TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
-//                    assert dao != null;
-//                    if(dao.getType().equals("history"))
-//
-//                    }
+                    if(postSnapshot.getValue(TransactionDao.class).getIngroupid().equals(ingroupid)){
+                        TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
+                        transaction.add(dao);
+                    }
                 }
                 adapter = new InGroupAdapter(transaction);
                 listView.setAdapter(adapter);
