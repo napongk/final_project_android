@@ -142,6 +142,7 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
 
     public void pushdatabase(View view) {
         addGroup();
+        finish();
     }
 
     public void checkCheckBox() {

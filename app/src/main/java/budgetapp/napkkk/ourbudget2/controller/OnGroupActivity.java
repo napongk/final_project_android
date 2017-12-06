@@ -40,8 +40,8 @@ public class OnGroupActivity extends AppCompatActivity {
     EditText edit_groupname, edit_description, edit_money;
     LinearLayout edit_form, profilelayout;
     DatabaseReference databaseReference;
-    List<GroupDao> group;
-    List<TransactionDao> transaction;
+    List<GroupDao> group = new ArrayList<>();
+    List<TransactionDao> transaction = new ArrayList<>();
     GroupAdapter adapter;
     ListView listView;
     ProfilePictureView profilePictureView;
@@ -53,8 +53,6 @@ public class OnGroupActivity extends AppCompatActivity {
         setContentView(R.layout.ongroup_activity);
 
         listView = findViewById(R.id.groupListView);
-        group = new ArrayList<>();
-        transaction = new ArrayList<>();
 
         Toast.makeText(OnGroupActivity.this, "หากชื่อผู้ใช้งานและรูปไม่ขึ้น กรุณาล็อคอินใหม่อีกครั้ง", Toast.LENGTH_SHORT).show();
 
@@ -109,9 +107,11 @@ public class OnGroupActivity extends AppCompatActivity {
                 group.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     GroupDao dao = postSnapshot.getValue(GroupDao.class);
-                    boolean name = postSnapshot.getValue(GroupDao.class).getInmember().containsKey("Saii Jirapinya");
-                    if(name) {
-                        group.add(dao);
+                    if(postSnapshot.getValue(GroupDao.class).getInmember() != null) {
+                        boolean name = postSnapshot.getValue(GroupDao.class).getInmember().containsKey(sp.getString("name", "null"));
+                        if (name) {
+                            group.add(dao);
+                        }
                     }
                 }
                 adapter = new GroupAdapter(group);
