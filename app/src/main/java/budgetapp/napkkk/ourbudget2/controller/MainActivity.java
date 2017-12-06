@@ -65,11 +65,6 @@ public class MainActivity extends AppCompatActivity {
         editor = sp.edit();
         initFirebase();
 
-
-//        nameLogin = findViewById(R.id.nameLogin);
-//        emailLogin = findViewById(R.id.emailLogin);
-//        genderLogin = findViewById(R.id.genderLogin);
-
         ///// Login อยู่ ///////////////
 
         if (AccessToken.getCurrentAccessToken() != null){
