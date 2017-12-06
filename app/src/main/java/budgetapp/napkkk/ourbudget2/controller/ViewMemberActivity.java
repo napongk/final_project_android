@@ -81,7 +81,6 @@ public class ViewMemberActivity extends AppCompatActivity {
     }
 
     private void getQuery() {
-        Toast.makeText(ViewMemberActivity.this, catchID(), Toast.LENGTH_SHORT).show();
         Query query = databaseReference.child("Group_List").child(catchID()).child("inmember");
         query.addValueEventListener(new ValueEventListener() {
             @Override

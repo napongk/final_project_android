@@ -410,7 +410,6 @@ public class InGroupActivity extends AppCompatActivity {
                 membernumber.setTextColor(Color.WHITE);
                 membernumber.setTypeface(null, Typeface.BOLD);
                 membernumber.setTextSize(14);
-                Toast.makeText(InGroupActivity.this, dataSnapshot.getChildrenCount()+"", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -434,7 +433,6 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void inchargeQuery() {
-        Toast.makeText(InGroupActivity.this, transactionId, Toast.LENGTH_SHORT).show();
         Query query = databaseReference.child("Transaction").child(transactionId).child("incharge");
         query.addValueEventListener(new ValueEventListener() {
             @Override

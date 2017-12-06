@@ -60,7 +60,6 @@ public class AddMemberActivity extends AppCompatActivity {
                 String id = databaseReference.child("Group_List").push().getKey();
                 UserDao dao = user.get(i);
                 addMemberDialog(dao, id);
-                Toast.makeText(AddMemberActivity.this, user.get(i).getUserName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -124,8 +123,6 @@ public class AddMemberActivity extends AppCompatActivity {
         final String groupid = catchID();
         final String groupname = groupName;
 
-        Toast.makeText(AddMemberActivity.this, "groupid " + groupid, Toast.LENGTH_SHORT).show();
-        Toast.makeText(AddMemberActivity.this, "groupname " + groupname, Toast.LENGTH_SHORT).show();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("เพิ่มสมาชิก");
