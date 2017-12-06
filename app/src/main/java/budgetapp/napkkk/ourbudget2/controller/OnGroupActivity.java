@@ -102,16 +102,17 @@ public class OnGroupActivity extends AppCompatActivity {
     }
 
     private void showData() {
-        Query query = databaseReference.child("Group_List").orderByChild(sp.getString("name","null"));
+        Query query = databaseReference.child("Group_List");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 group.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     GroupDao dao = postSnapshot.getValue(GroupDao.class);
-//                    if(dao.getInmember().get("userName").equals(sp.getString("name","null"))) {
+                    boolean name = postSnapshot.getValue(GroupDao.class).getInmember().containsKey("Saii Jirapinya");
+                    if(name) {
                         group.add(dao);
-//                    }
+                    }
                 }
                 adapter = new GroupAdapter(group);
                 listView.setAdapter(adapter);

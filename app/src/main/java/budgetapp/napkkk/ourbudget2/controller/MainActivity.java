@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 //            emailLogin.setText("eiei");
 //            genderLogin.setText(jsonObject.getString("gender"));
 //            nameLogin.setText(jsonObject.getString("name"));
+
             String dummy = jsonObject.getString("email");
 
         } catch (JSONException e) {
