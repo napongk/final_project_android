@@ -317,11 +317,11 @@ public class InGroupActivity extends AppCompatActivity {
         inchargeQuery();
 
         if(selected.equals("income")){
-            dialog_banner.setText("Income Transaction");
+            dialog_banner.setText("เพิ่มรายการรายรับ");
             dialog_banner.setBackgroundColor(Color.parseColor("#FF46A746"));
         }
         else{
-            dialog_banner.setText("Expense Transaction");
+            dialog_banner.setText("เพิ่มรายการรายจ่าย");
             dialog_banner.setBackgroundColor(Color.parseColor("#ff6961"));
         }
 

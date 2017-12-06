@@ -1,11 +1,14 @@
 package budgetapp.napkkk.ourbudget2.model;
 
+import java.util.HashMap;
+
 /**
  * Created by napkkk on 21/11/2560.
  */
 
 public class GroupDao {
     private String groupid, type, name, time, owner, money, target, description;
+    private HashMap<String, HashMap<String, String>> inmember;
 
     public String getGroupid() {
         return groupid;
@@ -69,5 +72,13 @@ public class GroupDao {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public HashMap<String, HashMap<String, String>> getInmember() {
+        return inmember;
+    }
+
+    public void setInmember(HashMap<String, HashMap<String, String>> inmember) {
+        this.inmember = inmember;
     }
 }

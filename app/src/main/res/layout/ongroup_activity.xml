@@ -19,6 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/gradient"
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.Toolbar
@@ -26,7 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="?attr/colorPrimary"
                     android:minHeight="?attr/actionBarSize"
                     android:theme="?attr/actionBarTheme"
                     app:title="กลุ่มของคุณ" />
@@ -83,6 +83,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginEnd="16dp"
+        app:backgroundTint="@color/com_facebook_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/testJson"

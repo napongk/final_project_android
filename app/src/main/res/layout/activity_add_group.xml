@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="budgetapp.napkkk.ourbudget2.controller.AddGroupActivity">
+    android:background="#007bff"
+    tools:context="budgetapp.napkkk.ourbudget2.controller.AddGroupActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -54,165 +57,139 @@
                     android:textSize="18sp" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/trans_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:backgroundTint="@color/cardview_light_background" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:background="#007bff"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/type_text"
+                    android:id="@+id/startmoney"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="ประเภท : "
-                    android:textColor="@android:color/black"
-                    tools:layout_editor_absoluteX="16dp"
-                    tools:layout_editor_absoluteY="85dp" />
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="จำนวนเงินเริ่มต้น"
+                    android:textColor="#FFFFFF" />
+
+                <EditText
+                    android:id="@+id/startmoney_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="@color/cardview_shadow_end_color"
+                    android:ems="10"
+                    android:hint="0"
+                    android:inputType="textPersonName"
+                    android:text="0"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/description_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="คำบรรยาย"
+                    android:textColor="#FFFFFF" />
+
+                <EditText
+                    android:id="@+id/description_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="@color/cardview_shadow_end_color"
+                    android:ems="10"
+                    android:hint="คำบรรยาย...."
+                    android:inputType="textMultiLine|textPersonName" />
 
                 <CheckBox
-                    android:id="@+id/expenseType"
+                    android:id="@+id/targetamount"
                     android:layout_width="match_parent"
-                    android:layout_height="21dp"
-                    android:layout_weight="1"
-                    android:text="รายจ่าย"
-                    tools:layout_editor_absoluteX="210dp"
-                    tools:layout_editor_absoluteY="83dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="จำนวนเงินเป้าหมาย (เลือกได้)"
+                    android:textColor="#FFFFFF" />
 
-                <CheckBox
-                    android:id="@+id/incomeType"
+                <EditText
+                    android:id="@+id/targetmoney_amount"
                     android:layout_width="match_parent"
-                    android:layout_height="21dp"
-                    android:layout_weight="1"
-                    android:text="รายรับ"
-                    tools:layout_editor_absoluteX="94dp"
-                    tools:layout_editor_absoluteY="83dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="@color/cardview_shadow_end_color"
+                    android:ems="10"
+                    android:hint="0"
+                    android:inputType="textPersonName"
+                    android:text="0"
+                    android:textColor="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/timetarget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="0.7"
+                        android:text="ระยะเวลา (เลือกได้)"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/pickdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="pickdate" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/donebutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:onClick="pushdatabase"
+                    android:text="Done" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/descript1"
-                android:layout_width="match_parent"
-                android:layout_height="22dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="28dp"
-                android:text="*คุณสามารถเลือกได้ทั้ง 2 แบบ"
-                android:textColor="@android:color/black"
-                tools:layout_editor_absoluteX="21dp"
-                tools:layout_editor_absoluteY="117dp" />
-
-            <TextView
-                android:id="@+id/startmoney"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:text="จำนวนเงินเริ่มต้น"
-                android:textColor="@android:color/black" />
-
-            <EditText
-                android:id="@+id/startmoney_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:backgroundTint="@color/cardview_shadow_end_color"
-                android:ems="10"
-                android:hint="0"
-                android:inputType="textPersonName"
-                android:text="0" />
-
-            <TextView
-                android:id="@+id/description_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:text="คำบรรยาย"
-                android:textColor="@android:color/black" />
-
-            <EditText
-                android:id="@+id/description_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:backgroundTint="@color/cardview_shadow_end_color"
-                android:ems="10"
-                android:hint="คำบรรยาย...."
-                android:inputType="textMultiLine|textPersonName" />
-
-            <CheckBox
-                android:id="@+id/targetamount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:text="จำนวนเงินเป้าหมาย (เลือกได้)" />
-
-            <EditText
-                android:id="@+id/targetmoney_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:backgroundTint="@color/cardview_shadow_end_color"
-                android:ems="10"
-                android:hint="0"
-                android:inputType="textPersonName"
-                android:text="0" />
-
-            <CheckBox
-                android:id="@+id/timetarget"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:text="ระยะเวลา (เลือกได้)" />
-
-            <TextView
-                android:id="@+id/textDate"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:text="TextView" />
-
-            <Button
-                android:id="@+id/pickdate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:text="picktime" />
-
-            <Button
-                android:id="@+id/donebutton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:onClick="pushdatabase"
-                android:text="Done" />
 
         </LinearLayout>
 

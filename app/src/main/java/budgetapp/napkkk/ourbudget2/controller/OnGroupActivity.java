@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -99,16 +100,16 @@ public class OnGroupActivity extends AppCompatActivity {
     }
 
     private void showData() {
-        Query query = databaseReference.child("Group_List").orderByChild("owner").equalTo(sp.getString("name", "null"));
+        Query query = databaseReference.child("Group_List").orderByChild(sp.getString("name","null"));
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 group.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     GroupDao dao = postSnapshot.getValue(GroupDao.class);
-                    group.add(dao);
-
+//                    if(dao.getInmember().get("userName").equals(sp.getString("name","null"))) {
+                        group.add(dao);
+//                    }
                 }
                 adapter = new GroupAdapter(group);
                 listView.setAdapter(adapter);
@@ -265,5 +266,29 @@ public class OnGroupActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("คุณต้องการจะออกจาก ourBudget หรือไม่ ?");
+
+        builder.setPositiveButton("ออก", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.create();
+        builder.show();
     }
 }

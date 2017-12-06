@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
 //    TextView status;
     TextView nameLogin, emailLogin, genderLogin;
     CallbackManager callbackManager;
-    Button doLogin;
     ProfileTracker profileTracker;
-    ProfilePictureView profilePictureView;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
@@ -67,24 +65,19 @@ public class MainActivity extends AppCompatActivity {
         editor = sp.edit();
         initFirebase();
 
-        doLogin = findViewById(R.id.docontinue);
 
 //        nameLogin = findViewById(R.id.nameLogin);
 //        emailLogin = findViewById(R.id.emailLogin);
 //        genderLogin = findViewById(R.id.genderLogin);
-        profilePictureView = findViewById(R.id.imageLogin2);
-
 
         ///// Login อยู่ ///////////////
 
         if (AccessToken.getCurrentAccessToken() != null){
             Toast.makeText(MainActivity.this, "Already Logged in", Toast.LENGTH_SHORT).show();
-            doLogin.setEnabled(true);
             startActivity(intent);
         }
         ////// ยังไม่ได้ Login ///////////
         else{
-            doLogin.setEnabled(false);
         }
 
         try {
@@ -129,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
+                Intent intent = new Intent(MainActivity.this, OnGroupActivity.class);
+                startActivity(intent);
+
 
                 Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
@@ -151,13 +147,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        doLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent);
-            }
-        });
-
     }
 
     @Override
@@ -172,9 +161,6 @@ public class MainActivity extends AppCompatActivity {
 //            genderLogin.setText(jsonObject.getString("gender"));
 //            nameLogin.setText(jsonObject.getString("name"));
             String dummy = jsonObject.getString("email");
-
-            profilePictureView.setPresetSize(ProfilePictureView.NORMAL);
-            profilePictureView.setProfileId(sp.getString("imageid","null"));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -205,9 +191,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "User Added", Toast.LENGTH_LONG).show();
         } else {
             //if the value is not given displaying a toast
-            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "User Added failed", Toast.LENGTH_LONG).show();
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

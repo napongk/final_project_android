@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +33,14 @@ import budgetapp.napkkk.ourbudget2.model.UserDao;
 public class AddGroupActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     Calendar now;
     TextView datetext;
-    Button datepick;
+    Button datepickfrom, datepickto;
     EditText groupName, startMoney, targetMoney, descritpion_text;
     CheckBox income,expense,target,time;
     String typeChosen,targetStat,timeStat,textDate;
     List group;
     DatabaseReference databaseReference;
     SharedPreferences sp;
+    Spinner trans_spinner;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -49,9 +52,10 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
         initFirebase();
 
         getSupportActionBar().setTitle("เพิ่มกลุ่ม");
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        datepick.setOnClickListener(new View.OnClickListener() {
+        datepickfrom.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 now = Calendar.getInstance();
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -79,19 +83,57 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
     private void initInstances() {
         sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
 
+        trans_spinner = findViewById(R.id.trans_spinner);
+
+        ArrayList<String> spinneritem = new ArrayList<String>();
+        spinneritem.add("รายรับ");
+        spinneritem.add("รายจ่าย");
+        spinneritem.add("รายรับ & รายจ่าย");
+
+        ArrayAdapter<String> adapter_trans = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, spinneritem);
+        trans_spinner.setAdapter(adapter_trans);
+
         datetext = findViewById(R.id.textDate);
 
         groupName = findViewById(R.id.groupName);
         startMoney = findViewById(R.id.startmoney_amount);
         targetMoney = findViewById(R.id.targetmoney_amount);
+        targetMoney.setEnabled(false);
         descritpion_text = findViewById(R.id.description_text);
 
-        datepick = findViewById(R.id.pickdate);
+        datepickfrom = findViewById(R.id.pickdate);
+        datepickfrom.setEnabled(false);
 
-        income = findViewById(R.id.incomeType);
-        expense = findViewById(R.id.expenseType);
         target = findViewById(R.id.targetamount);
+
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!target.isChecked()){
+                    targetMoney.setEnabled(false);
+                }
+                else{
+                    targetMoney.setEnabled(true);
+                }
+            }
+        });
+
         time = findViewById(R.id.timetarget);
+
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(time.isChecked()){
+                    datepickfrom.setEnabled(true);
+//                    datepickto.setEnabled(true);
+                }
+                else{
+                    datepickfrom.setEnabled(false);
+//                    datepickto.setEnabled(false);
+                }
+            }
+        });
 
 
         group = new ArrayList<>();
@@ -103,13 +145,13 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
     }
 
     public void checkCheckBox() {
-        if(income.isChecked() && expense.isChecked()){
+        if(trans_spinner.getSelectedItem().toString().equals("รายรับ & รายจ่าย")){
             typeChosen = "both";
         }
-        else if(expense.isChecked()){
+        else if(trans_spinner.getSelectedItem().toString().equals("รายจ่าย")){
             typeChosen = "expense";
         }
-        else if(income.isChecked()){
+        else if(trans_spinner.getSelectedItem().toString().equals("รายรับ")){
             typeChosen = "income";
         }
         if(target.isChecked()){
@@ -156,14 +198,14 @@ public class AddGroupActivity extends AppCompatActivity implements DatePickerDia
 
 
             databaseReference.child("Group_List").child(id).setValue(groupDB);
-            databaseReference.child("Group_List").child(id).child("inmember").child(id).setValue(userDao);
+            databaseReference.child("Group_List").child(id).child("inmember").child(sp.getString("name", "null")).setValue(userDao);
             databaseReference.child("User").child(sp.getString("name","null")).child("own").child(id).setValue(name);
             databaseReference.child("User").child(sp.getString("name","null")).child("inmember").child(id).setValue(name);
 
             Toast.makeText(this, "Group Added", Toast.LENGTH_LONG).show();
         } else {
             //if the value is not given displaying a toast
-            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
         }
     }
 }

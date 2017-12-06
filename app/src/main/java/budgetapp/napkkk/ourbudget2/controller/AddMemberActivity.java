@@ -44,6 +44,7 @@ public class AddMemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_member);
 
         getSupportActionBar().setTitle("เพิ่มสมาชิก");
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -133,8 +134,8 @@ public class AddMemberActivity extends AppCompatActivity {
         builder.setPositiveButton("เพิ่ม", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                databaseReference.child("Group_List").child(groupid).child("inmember").child(id).child("userName").setValue(dao.getUserName());
-                databaseReference.child("Group_List").child(groupid).child("inmember").child(id).child("userPic").setValue(dao.getUserPic());
+                databaseReference.child("Group_List").child(groupid).child("inmember").child(dao.getUserName()).child("userName").setValue(dao.getUserName());
+                databaseReference.child("Group_List").child(groupid).child("inmember").child(dao.getUserName()).child("userPic").setValue(dao.getUserPic());
                 databaseReference.child("User").child(dao.getUserName()).child("inmember").child(groupid).setValue(groupname);
                 Toast.makeText(AddMemberActivity.this, "เพิ่ม " + dao.getUserName() + " เข้ากลุ่มแล้ว", Toast.LENGTH_SHORT).show();
                 dialogInterface.dismiss();
