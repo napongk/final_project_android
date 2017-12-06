@@ -64,7 +64,7 @@ public class InGroupActivity extends AppCompatActivity {
     GroupDao dao;
     SectionPageAdapter adapter;
     AlertDialog.Builder alert;
-    String transactionId;
+    String transactionId = "dummy";
     TabLayout tabLayout;
     ViewPager mViewPager;
     DecimalFormat formatter;
@@ -157,7 +157,7 @@ public class InGroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFragment() {
+    private void setupFragment(GroupDao dao) {
 //        try {
             bundle.putString("ingroupid", dao.getGroupid());
             income_fragment = new INCOME_fragment();
@@ -174,12 +174,12 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
 
-    private void setupViewPager() {
+    private void setupViewPager(GroupDao dao) {
 //        try {
             final SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
             mViewPager = findViewById(R.id.container);
             tabLayout = findViewById(R.id.tabs);
-            setupFragment();
+            setupFragment(dao);
 
 
             switch (dao.getType()) {
@@ -256,8 +256,8 @@ public class InGroupActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dao = dataSnapshot.getValue(GroupDao.class);
 //                Toast.makeText(InGroupActivity.this, dao.getGroupid(), Toast.LENGTH_SHORT).show();
-                setData();
-                setupViewPager();
+                setData(dao);
+                setupViewPager(dao);
             }
 
             @Override
@@ -267,7 +267,7 @@ public class InGroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setData() {
+    private void setData(GroupDao dao) {
 //        try {
             if ("OFF".equals(dao.getTarget())) {
                 goalmoney.setVisibility(View.GONE);
@@ -301,9 +301,10 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void showAddDialog(View mView){
-        transactionId = databaseReference.child("Incharge").push().getKey();
-
-        databaseReference.child("Transaction").child(transactionId).child("ingroupid").setValue(catchID());
+        transactionId = databaseReference.child("TransactionId").push().getKey();
+//
+        databaseReference.child("Transaction").child(transactionId).child("ingroupid").setValue(dao.getGroupid());
+        databaseReference.child("Transaction").child(transactionId).child("type").setValue("history");
 
         alert = new AlertDialog.Builder(InGroupActivity.this);
         mView = getLayoutInflater().inflate(R.layout.dialog_addtrans, null);
@@ -353,13 +354,12 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void addTransaction(String descript, String money) {
-        String id = databaseReference.child("Transaction").push().getKey();
 
         //checking if the value is provided
         if (!TextUtils.isEmpty(descript)) {
 
             TransactionDao transactionDao = new TransactionDao();
-            transactionDao.setId(id);
+            transactionDao.setId(transactionId);
             transactionDao.setDescription(descript);
             transactionDao.setMoney(money);
             transactionDao.setType(selected);

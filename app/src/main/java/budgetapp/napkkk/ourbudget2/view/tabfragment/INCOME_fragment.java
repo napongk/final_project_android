@@ -47,6 +47,8 @@ public class INCOME_fragment extends android.support.v4.app.Fragment{
         Bundle bundle = getArguments();
         ingroupid = bundle.getString("ingroupid");
 
+        Toast.makeText(getContext(), "fragment : " + ingroupid, Toast.LENGTH_SHORT).show();
+
         transaction = new ArrayList<>();
         listView = view.findViewById(R.id.ingroup_listview);
         initFirebase();
