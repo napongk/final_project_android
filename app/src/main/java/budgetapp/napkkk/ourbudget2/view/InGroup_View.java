@@ -45,7 +45,6 @@ public class InGroup_View extends FrameLayout {
     private void initInstances() {
         tvDescription = findViewById(R.id.item_descript);
         tvCost = findViewById(R.id.cost);
-        tvPerson = findViewById(R.id.agent);
         incomeicon = findViewById(R.id.incomeicon);
         expenseicon = findViewById(R.id.expenseicon);
         historyicon = findViewById(R.id.historyicon);
