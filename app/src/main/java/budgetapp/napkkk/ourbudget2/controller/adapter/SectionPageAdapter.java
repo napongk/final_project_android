@@ -7,22 +7,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by napkkk on 24/11/2560.
- */
 
 public class SectionPageAdapter extends FragmentPagerAdapter {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentListTitleList = new ArrayList<>();
 
-    public void addFragment(Fragment fragment, String title){
-        mFragmentList.add(fragment);
-        mFragmentListTitleList.add(title);
-    }
-
     public SectionPageAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    public void addFragment(Fragment fragment, String title) {
+        mFragmentList.add(fragment);
+        mFragmentListTitleList.add(title);
     }
 
     @Override

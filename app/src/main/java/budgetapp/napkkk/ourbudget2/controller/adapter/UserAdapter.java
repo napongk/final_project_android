@@ -10,21 +10,17 @@ import java.util.List;
 import budgetapp.napkkk.ourbudget2.model.UserDao;
 import budgetapp.napkkk.ourbudget2.view.User_View;
 
-/**
- * Created by napkkk on 22/11/2560.
- */
-
 public class UserAdapter extends BaseAdapter {
 
-    List<UserDao>  user;
+    List<UserDao> user;
 
-    public UserAdapter(List<UserDao> user){
+    public UserAdapter(List<UserDao> user) {
         this.user = user;
     }
 
     @Override
     public int getCount() {
-        if(user == null){
+        if (user == null) {
             return 0;
         }
         return user.size();
@@ -47,8 +43,7 @@ public class UserAdapter extends BaseAdapter {
         if (view != null) {
             item = (User_View) view;
 
-        }
-        else {
+        } else {
             item = new User_View(viewGroup.getContext());
         }
 

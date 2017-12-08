@@ -2,10 +2,6 @@ package budgetapp.napkkk.ourbudget2.model;
 
 import java.util.HashMap;
 
-/**
- * Created by napkkk on 2/12/2560.
- */
-
 public class UserDao {
     private String userName, userPic;
     private HashMap<String, String> inmember, own, incharge;

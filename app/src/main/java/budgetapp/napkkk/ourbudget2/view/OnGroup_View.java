@@ -1,8 +1,6 @@
 package budgetapp.napkkk.ourbudget2.view;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -11,11 +9,8 @@ import android.widget.TextView;
 
 import budgetapp.napkkk.ourbudget2.R;
 
-/**
- * Created by napkkk on 22/11/2560.
- */
 
-public class OnGroup_View extends FrameLayout{
+public class OnGroup_View extends FrameLayout {
     private TextView tvName;
     private TextView tvGroup;
 
@@ -25,7 +20,6 @@ public class OnGroup_View extends FrameLayout{
         initInflate();
         initInstances();
     }
-
 
 
     public OnGroup_View(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -40,8 +34,8 @@ public class OnGroup_View extends FrameLayout{
         initInstances();
     }
 
-    public void initInflate(){
-        inflate(getContext(), R.layout.ongroup_item,this);
+    public void initInflate() {
+        inflate(getContext(), R.layout.ongroup_item, this);
     }
 
     private void initInstances() {
@@ -52,6 +46,7 @@ public class OnGroup_View extends FrameLayout{
     public void setTvName(String text) {
         tvName.setText(text);
     }
+
     public void setTvGroup(String text) {
         tvGroup.setText(text);
     }

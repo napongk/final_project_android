@@ -1,19 +1,17 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -23,10 +21,8 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,19 +31,15 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.Collections;
 
 import budgetapp.napkkk.ourbudget2.R;
-import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.model.UserDao;
 
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-//    TextView status;
-    TextView nameLogin, emailLogin, genderLogin;
     CallbackManager callbackManager;
-    ProfileTracker profileTracker;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
@@ -67,16 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         ///// Login อยู่ ///////////////
 
-        if (AccessToken.getCurrentAccessToken() != null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             Toast.makeText(MainActivity.this, "Already Logged in", Toast.LENGTH_SHORT).show();
             startActivity(intent);
         }
-        ////// ยังไม่ได้ Login ///////////
-        else{
-        }
 
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(
+            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager().getPackageInfo(
                     "budgetapp.napkkk.ourbudget2",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -86,12 +75,15 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {
 
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException ignored) {
 
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////// Login Access & Get Data ////////////////////////////////////
         loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+        loginButton.setReadPermissions(Collections.singletonList("public_profile, email, user_birthday, user_friends"));
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -101,15 +93,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.v("Main", response.toString());
                         try {
-                            editor.putString("name", object.getString("name").toString());
-                            editor.putString("imageid", object.getString("id").toString());
-
+                            editor.putString("name", object.getString("name"));
+                            editor.putString("imageid", object.getString("id"));
+                            editor.apply();
                             addUser(object);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        editor.commit();
-                        setProfileToView(object);
                     }
                 });
                 Bundle parameters = new Bundle();
@@ -122,12 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-
-//                status.setText("Login Success \n" + loginResult.getAccessToken().getUserId() + "\n" + loginResult.getAccessToken().getToken());
-
-
-//                startActivity(intent);
-
             }
 
             @Override
@@ -144,32 +128,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /////////////////////////// init&Setting ///////////////////////////////////////
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setProfileToView(JSONObject jsonObject) {
-        try {
-//            emailLogin.setText(jsonObject.getString("email"));
-//            emailLogin.setText("eiei");
-//            genderLogin.setText(jsonObject.getString("gender"));
-//            nameLogin.setText(jsonObject.getString("name"));
-
-            String dummy = jsonObject.getString("email");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void initFirebase() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
+    ///////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////// Query /////////////////////////////////////////////////////
+
     private void addUser(JSONObject jsonObject) throws JSONException {
 
-        //checking if the value is provided
         if (!TextUtils.isEmpty(jsonObject.getString("name"))) {
             String id = databaseReference.child("User").push().getKey();
 
@@ -183,16 +159,12 @@ public class MainActivity extends AppCompatActivity {
             databaseReference.child("User").child(jsonObject.getString("name")).setValue(userDao);
             databaseReference.child("User").child(jsonObject.getString("name")).child("inmember").child("dummy").setValue("dummy");
             databaseReference.child("User").child(jsonObject.getString("name")).child("own").child("dummy").setValue("dummy");
-
-            Toast.makeText(this, "User Added", Toast.LENGTH_LONG).show();
         } else {
             //if the value is not given displaying a toast
             Toast.makeText(this, "User Added failed", Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
 }

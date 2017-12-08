@@ -10,21 +10,17 @@ import java.util.List;
 import budgetapp.napkkk.ourbudget2.model.GroupDao;
 import budgetapp.napkkk.ourbudget2.view.OnGroup_View;
 
-/**
- * Created by napkkk on 22/11/2560.
- */
-
 public class GroupAdapter extends BaseAdapter {
 
-    List<GroupDao>  group;
+    List<GroupDao> group;
 
-    public GroupAdapter(List<GroupDao> group){
+    public GroupAdapter(List<GroupDao> group) {
         this.group = group;
     }
 
     @Override
     public int getCount() {
-        if(group == null){
+        if (group == null) {
             return 0;
         }
         return group.size();
@@ -44,9 +40,9 @@ public class GroupAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         OnGroup_View item;
         if (view != null)
-        item = (OnGroup_View) view;
+            item = (OnGroup_View) view;
         else
-        item = new OnGroup_View(viewGroup.getContext());
+            item = new OnGroup_View(viewGroup.getContext());
 
         GroupDao dao = group.get(i);
 

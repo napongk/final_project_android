@@ -7,12 +7,9 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
-import budgetapp.napkkk.ourbudget2.view.InGroup_View;
 import budgetapp.napkkk.ourbudget2.model.TransactionDao;
+import budgetapp.napkkk.ourbudget2.view.InGroup_View;
 
-/**
- * Created by napkkk on 25/11/2560.
- */
 
 public class InGroupAdapter extends BaseAdapter {
 
@@ -24,7 +21,7 @@ public class InGroupAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(ingroup == null){
+        if (ingroup == null) {
             return 0;
         }
         return ingroup.size();

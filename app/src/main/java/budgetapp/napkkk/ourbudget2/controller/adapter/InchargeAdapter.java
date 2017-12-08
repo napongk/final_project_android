@@ -9,23 +9,18 @@ import java.util.List;
 
 import budgetapp.napkkk.ourbudget2.model.UserDao;
 import budgetapp.napkkk.ourbudget2.view.Incharge_View;
-import budgetapp.napkkk.ourbudget2.view.User_View;
-
-/**
- * Created by napkkk on 22/11/2560.
- */
 
 public class InchargeAdapter extends BaseAdapter {
 
-    List<UserDao>  user;
+    List<UserDao> user;
 
-    public InchargeAdapter(List<UserDao> user){
+    public InchargeAdapter(List<UserDao> user) {
         this.user = user;
     }
 
     @Override
     public int getCount() {
-        if(user == null){
+        if (user == null) {
             return 0;
         }
         return user.size();
@@ -48,8 +43,7 @@ public class InchargeAdapter extends BaseAdapter {
         if (view != null) {
             item = (Incharge_View) view;
 
-        }
-        else {
+        } else {
             item = new Incharge_View(viewGroup.getContext());
         }
 

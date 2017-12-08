@@ -21,7 +21,7 @@ import java.util.List;
  * Created by napkkk on 30/11/2560.
  */
 
-public class SwipeToDeleteListViewListener implements View.OnTouchListener{
+public class SwipeToDeleteListViewListener implements View.OnTouchListener {
 
     private int mSlop;
     private int mMinFlingVelocity;
@@ -46,15 +46,6 @@ public class SwipeToDeleteListViewListener implements View.OnTouchListener{
     private boolean mPaused;
 
 
-    public interface DismissCallbacks {
-
-        boolean canDismiss(int position);
-
-
-        void onDismiss(ListView listView, int[] reverseSortedPositions);
-    }
-
-
     public SwipeToDeleteListViewListener(ListView listView, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
         mSlop = vc.getScaledTouchSlop();
@@ -65,7 +56,6 @@ public class SwipeToDeleteListViewListener implements View.OnTouchListener{
         mListView = listView;
         mCallbacks = callbacks;
     }
-
 
     public void setEnabled(boolean enabled) {
         mPaused = !enabled;
@@ -241,22 +231,6 @@ public class SwipeToDeleteListViewListener implements View.OnTouchListener{
         return false;
     }
 
-    class PendingDismissData implements Comparable<PendingDismissData> {
-        public int position;
-        public View view;
-
-        public PendingDismissData(int position, View view) {
-            this.position = position;
-            this.view = view;
-        }
-
-        @Override
-        public int compareTo(PendingDismissData other) {
-            // Sort by descending position
-            return other.position - position;
-        }
-    }
-
     private void performDismiss(final View dismissView, final int dismissPosition) {
         // Animate the dismissed list item to zero-height and fire the dismiss callback when
         // all dismissed list item animations have completed. This triggers layout on each animation
@@ -317,5 +291,29 @@ public class SwipeToDeleteListViewListener implements View.OnTouchListener{
 
         mPendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
         animator.start();
+    }
+
+    public interface DismissCallbacks {
+
+        boolean canDismiss(int position);
+
+
+        void onDismiss(ListView listView, int[] reverseSortedPositions);
+    }
+
+    class PendingDismissData implements Comparable<PendingDismissData> {
+        public int position;
+        public View view;
+
+        public PendingDismissData(int position, View view) {
+            this.position = position;
+            this.view = view;
+        }
+
+        @Override
+        public int compareTo(PendingDismissData other) {
+            // Sort by descending position
+            return other.position - position;
+        }
     }
 }

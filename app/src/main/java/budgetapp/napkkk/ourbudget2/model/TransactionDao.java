@@ -3,9 +3,6 @@ package budgetapp.napkkk.ourbudget2.model;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by napkkk on 25/11/2560.
- */
 
 public class TransactionDao {
     private String id , ingroupid, description, money, type;

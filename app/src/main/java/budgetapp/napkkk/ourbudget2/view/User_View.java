@@ -4,24 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
 
 import budgetapp.napkkk.ourbudget2.R;
 
-/**
- * Created by napkkk on 26/11/2560.
- */
-
 public class User_View extends FrameLayout {
     private TextView tvProfilename;
     private ProfilePictureView profilePic;
-
-
 
     public User_View(@NonNull Context context) {
         super(context);
@@ -41,8 +33,8 @@ public class User_View extends FrameLayout {
         initInstances();
     }
 
-    public void initInflate(){
-        inflate(getContext(),R.layout.viewmember_item,this);
+    public void initInflate() {
+        inflate(getContext(), R.layout.viewmember_item, this);
     }
 
     private void initInstances() {

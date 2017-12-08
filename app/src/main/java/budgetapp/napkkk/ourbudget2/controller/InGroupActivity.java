@@ -1,6 +1,7 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -62,7 +63,6 @@ public class InGroupActivity extends AppCompatActivity {
     LinearLayout timesection;
     Toolbar toolbar;
     GroupDao dao;
-    SectionPageAdapter adapter;
     AlertDialog.Builder alert;
     String transactionId = "dummy";
     TabLayout tabLayout;
@@ -70,6 +70,7 @@ public class InGroupActivity extends AppCompatActivity {
     DecimalFormat formatter;
     List<UserDao> userNormal, userInCharge;
     ListView showIncharge_listview, showAddInchagre_listview;
+    HashMap<String, HashMap<String, String>> incharge;
     InchargeAdapter inchargeAdapter;
     Button addinchargeBtn;
 
@@ -98,12 +99,8 @@ public class InGroupActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_member) {
             Intent intent = new Intent(InGroupActivity.this, ViewMemberActivity.class);
             intent.putExtra("groupID", catchID());
@@ -132,12 +129,9 @@ public class InGroupActivity extends AppCompatActivity {
         bundle = new Bundle();
 
         formatter = new DecimalFormat("#,###,###");
-
-
+        incharge = new HashMap<>();
 
         membernumber = new TextView(InGroupActivity.this);
-
-        SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
 
         currentmoney = findViewById(R.id.currentmoney);
         goalmoney = findViewById(R.id.goalmoney);
@@ -158,7 +152,6 @@ public class InGroupActivity extends AppCompatActivity {
     }
 
     private void setupFragment(GroupDao dao) {
-//        try {
             bundle.putString("ingroupid", dao.getGroupid());
             income_fragment = new INCOME_fragment();
             income_fragment.setArguments(bundle);
@@ -166,16 +159,10 @@ public class InGroupActivity extends AppCompatActivity {
             expense_fragment.setArguments(bundle);
             history_fragment = new HISTORY_fragment();
             history_fragment.setArguments(bundle);
-//        }
-
-//        catch(Exception e){
-//            errorDialog();
-//        }
     }
 
 
     private void setupViewPager(GroupDao dao) {
-//        try {
             final SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
             mViewPager = findViewById(R.id.container);
             tabLayout = findViewById(R.id.tabs);
@@ -235,27 +222,55 @@ public class InGroupActivity extends AppCompatActivity {
 
                 }
             });
-//        }
-//        catch(Exception e){
-//            errorDialog();
-//        }
+
+    }
+
+    private String catchID() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            return bundle.getString("groupID");
+        }
+
+        return null;
+    }
+
+    private void setData(GroupDao dao) {
+        if ("OFF".equals(dao.getTarget())) {
+            goalmoney.setVisibility(View.GONE);
+            moneybound.setVisibility(View.GONE);
+            spaceshow.setVisibility(View.GONE);
+            goalshow.setVisibility(View.GONE);
+        }
+        else{
+            goalmoney.setText(formatter.format(Integer.parseInt(dao.getTarget())));
+        }
+
+        if ("OFF".equals(dao.getTime())) {
+            timesection.setVisibility(View.GONE);
+        }
+        toolbar.setTitle(dao.getName());
+
+        currentmoney.setText(formatter.format(Integer.parseInt(dao.getMoney())));
+
+        timeshow.setText(dao.getTime());
+
+        if (dao.getDescription().isEmpty()) {
+            description.setVisibility(View.GONE);
+        } else {
+            description.setText(dao.getDescription());
+        }
 
     }
 
     /////////////// ---------------------------------- ///////////////////////////
 
-    private String catchID() {
-        Bundle bundle = getIntent().getExtras();
-        return bundle.getString("groupID");
-    }
-
+    /////////////// ------------Query----------------- ///////////////////////////
     private void getQuery() {
         Query query = databaseReference.child("Group_List").child(catchID());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dao = dataSnapshot.getValue(GroupDao.class);
-//                Toast.makeText(InGroupActivity.this, dao.getGroupid(), Toast.LENGTH_SHORT).show();
                 setData(dao);
                 setupViewPager(dao);
             }
@@ -267,42 +282,93 @@ public class InGroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setData(GroupDao dao) {
-//        try {
-            if ("OFF".equals(dao.getTarget())) {
-                goalmoney.setVisibility(View.GONE);
-                moneybound.setVisibility(View.GONE);
-                spaceshow.setVisibility(View.GONE);
-                goalshow.setVisibility(View.GONE);
-            }
-            else{
-                goalmoney.setText(formatter.format(Integer.parseInt(dao.getTarget())));
-            }
+    private void addTransaction(String descript, String money) {
 
-            if ("OFF".equals(dao.getTime())) {
-                timesection.setVisibility(View.GONE);
-            }
-            toolbar.setTitle(dao.getName());
+        //checking if the value is provided
+        if (!TextUtils.isEmpty(descript)) {
 
-            currentmoney.setText(formatter.format(Integer.parseInt(dao.getMoney())));
+            TransactionDao transactionDao = new TransactionDao();
+            transactionDao.setId(transactionId);
+            transactionDao.setDescription(descript);
+            transactionDao.setMoney(money);
+            transactionDao.setType(selected);
+//            transactionDao.setIncharge(incharge);
+            transactionDao.setIngroupid(dao.getGroupid());
 
-            timeshow.setText(dao.getTime());
+            databaseReference.child("Transaction").child(transactionId).setValue(transactionDao);
+            Toast.makeText(InGroupActivity.this, "สามารถปัดเลื่อนขวาที่รายการเพื่ออัพเดตข้อมูลได้", Toast.LENGTH_SHORT).show();
 
-            if (dao.getDescription().isEmpty()) {
-                description.setVisibility(View.GONE);
-            } else {
-                description.setText(dao.getDescription());
-            }
-//        }
-//        catch (Exception e){
-//            errorDialog();
-//        }
-
+            Toast.makeText(this, "Transaction added", Toast.LENGTH_LONG).show();
+        } else {
+            //if the value is not given displaying a toast
+            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
+        }
     }
 
+    private void inchargeQuery() {
+        Query query = databaseReference.child("Transaction").child(transactionId).child("incharge");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userNormal.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserDao userDao = postSnapshot.getValue(UserDao.class);
+                    userNormal.add(userDao);
+                }
+                inchargeAdapter = new InchargeAdapter(userNormal);
+                showIncharge_listview.setAdapter(inchargeAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+
+    public void moneyChange(String grpid, String type, Integer money) {
+        Integer moneyNow,
+                getMoney = Integer.parseInt(dao.getMoney());
+
+        if(type.equals("income")) {
+            moneyNow = getMoney + money;
+        }
+        else{
+            moneyNow = getMoney - money;
+        }
+
+        startCountAnimation(getMoney, moneyNow);
+        databaseReference.child("Group_List").child(grpid).child("money").setValue(moneyNow.toString());
+    }
+
+    private void addinchargeQuery() {
+        Query query = databaseReference.child("Group_List").child(catchID()).child("inmember");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userInCharge.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserDao userDao = postSnapshot.getValue(UserDao.class);
+                    userInCharge.add(userDao);
+                }
+                inchargeAdapter = new InchargeAdapter(userInCharge);
+                showAddInchagre_listview.setAdapter(inchargeAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                finish();
+            }
+        });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////// Dialog ////////////////////////////////////////
+
+    @SuppressLint("InflateParams")
     private void showAddDialog(View mView){
         transactionId = databaseReference.child("TransactionId").push().getKey();
-//
         databaseReference.child("Transaction").child(transactionId).child("ingroupid").setValue(dao.getGroupid());
         databaseReference.child("Transaction").child(transactionId).child("type").setValue("history");
 
@@ -336,7 +402,7 @@ public class InGroupActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        databaseReference.child("Transaction").child(String.valueOf(id)).removeValue();
+                        databaseReference.child("Transaction").child(transactionId).removeValue();
                         dialog.dismiss();
                     }
                 });
@@ -344,7 +410,7 @@ public class InGroupActivity extends AppCompatActivity {
         addinchargeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddInchargeDialog(transactionId);
+                showAddInchargeDialog();
             }
         });
 
@@ -353,131 +419,10 @@ public class InGroupActivity extends AppCompatActivity {
 
     }
 
-    private void addTransaction(String descript, String money) {
 
-        //checking if the value is provided
-        if (!TextUtils.isEmpty(descript)) {
-
-            TransactionDao transactionDao = new TransactionDao();
-            transactionDao.setId(transactionId);
-            transactionDao.setDescription(descript);
-            transactionDao.setMoney(money);
-            transactionDao.setType(selected);
-            transactionDao.setIngroupid(dao.getGroupid());
-
-            databaseReference.child("Transaction").child(transactionId).setValue(transactionDao);
-            Toast.makeText(InGroupActivity.this, "สามารถปัดเลื่อนขวาที่รายการเพื่ออัพเดตข้อมูลได้", Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(this, "Transaction added", Toast.LENGTH_LONG).show();
-        } else {
-            //if the value is not given displaying a toast
-            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void moneyChange(String grpid, String type, Integer money) {
-        Integer moneyNow,
-                getMoney = Integer.parseInt(dao.getMoney());
-
-        if(type.equals("income")) {
-            moneyNow = getMoney + money;
-        }
-        else{
-            moneyNow = getMoney - money;
-        }
-
-        startCountAnimation(getMoney, moneyNow);
-        databaseReference.child("Group_List").child(grpid).child("money").setValue(moneyNow.toString());
-    }
-
-    private void startCountAnimation(Integer start, Integer stop) {
-        ValueAnimator animator = ValueAnimator.ofInt(start, stop);
-        animator.setDuration(3000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                currentmoney.setText(formatter.format(animation.getAnimatedValue()));
-            }
-        });
-        animator.start();
-    }
-
-    private void displayMemberAmount(){
-        Query query = databaseReference.child("Group_List").child(dao.getGroupid()).child("inmember");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                membernumber.setText(dataSnapshot.getChildrenCount()+"");
-                membernumber.setTextColor(Color.WHITE);
-                membernumber.setTypeface(null, Typeface.BOLD);
-                membernumber.setTextSize(14);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void errorDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("เกิดข้อผิดพลาด");
-        builder.setMessage("กลุ่มของคุณโดนลบ");
-
-        builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.create();
-        builder.show();
-    }
-
-    private void inchargeQuery() {
-        Query query = databaseReference.child("Transaction").child(transactionId).child("incharge");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userNormal.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    UserDao userDao = postSnapshot.getValue(UserDao.class);
-                    userNormal.add(userDao);
-                }
-                inchargeAdapter = new InchargeAdapter(userNormal);
-                showIncharge_listview.setAdapter(inchargeAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-//                finish();
-            }
-        });
-    }
-
-    private void addinchargeQuery() {
-        Query query = databaseReference.child("Group_List").child(catchID()).child("inmember");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userInCharge.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    UserDao userDao = postSnapshot.getValue(UserDao.class);
-                    userInCharge.add(userDao);
-                }
-                inchargeAdapter = new InchargeAdapter(userInCharge);
-                showAddInchagre_listview.setAdapter(inchargeAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-//                finish();
-            }
-        });
-    }
-
-    private void showAddInchargeDialog(final String id){
+    private void showAddInchargeDialog(){
         alert = new AlertDialog.Builder(InGroupActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_addincharge, null);
+        @SuppressLint("InflateParams") View mView = getLayoutInflater().inflate(R.layout.dialog_addincharge, null);
         showAddInchagre_listview = mView.findViewById(R.id.addincharge_person);
         alert.setView(mView);
 
@@ -493,15 +438,49 @@ public class InGroupActivity extends AppCompatActivity {
         showAddInchagre_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String id = databaseReference.child("Incharge").push().getKey();
-                databaseReference.child("Transaction").child(transactionId).child("incharge").child(id).child("userName").setValue(userInCharge.get(i).getUserName());
-                databaseReference.child("Transaction").child(transactionId).child("incharge").child(id).child("userPic").setValue(userInCharge.get(i).getUserPic());
+                databaseReference.child("Transaction").child(transactionId).child("incharge").child(userInCharge.get(i).getUserName()).child("userName").setValue(userInCharge.get(i).getUserName());
+                databaseReference.child("Transaction").child(transactionId).child("incharge").child(userInCharge.get(i).getUserName()).child("userPic").setValue(userInCharge.get(i).getUserPic());
             }
         });
 
         alert.show();
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////// Display ////////////////////////////////////////////////////
+
+    private void startCountAnimation(Integer start, Integer stop) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, stop);
+        animator.setDuration(3000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                currentmoney.setText(formatter.format(animation.getAnimatedValue()));
+            }
+        });
+        animator.start();
+    }
+
+    private void displayMemberAmount(){
+        Query query = databaseReference.child("Group_List").child(dao.getGroupid()).child("inmember");
+        query.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                membernumber.setText(dataSnapshot.getChildrenCount()+"");
+                membernumber.setTextColor(Color.WHITE);
+                membernumber.setTypeface(null, Typeface.BOLD);
+                membernumber.setTextSize(14);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 }

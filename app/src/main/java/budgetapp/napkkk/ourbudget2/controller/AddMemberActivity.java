@@ -30,7 +30,7 @@ import budgetapp.napkkk.ourbudget2.model.UserDao;
 
 public class AddMemberActivity extends AppCompatActivity {
 
-    Button addtoggleBtn, addapplyBtn, cancelBtn;
+    Button addtoggleBtn;
     DatabaseReference databaseReference;
     SharedPreferences sp;
     List<UserDao> user;
@@ -47,12 +47,10 @@ public class AddMemberActivity extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         initFirebase();
         initInstance();
         personQuery();
         getGroupName();
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,10 +60,9 @@ public class AddMemberActivity extends AppCompatActivity {
                 addMemberDialog(dao, id);
             }
         });
-
     }
 
-
+    //////////////////////// menu initialize ///////////////////////////
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -80,7 +77,30 @@ public class AddMemberActivity extends AppCompatActivity {
     private void initFirebase() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
+    ///////////////////////////////////////////////////////////////////
 
+    ///////////////////////// initialize //////////////////////////////
+
+    private String catchID() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            return bundle.getString("groupID");
+        }
+        return null;
+    }
+
+    private void initInstance() {
+
+        addtoggleBtn = findViewById(R.id.addmember_button);
+        sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
+
+        user = new ArrayList<>();
+        listView = findViewById(R.id.addmember_listview);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+
+    //////////////////////////Firebase Query//////////////////////////////
 
     private void personQuery() {
         Query query = databaseReference.child("User");
@@ -105,18 +125,20 @@ public class AddMemberActivity extends AppCompatActivity {
         });
     }
 
-    private String catchID() {
-        Bundle bundle = getIntent().getExtras();
-        return bundle.getString("groupID");
-    }
 
-    private void initInstance() {
+    private void getGroupName() {
+        Query query = databaseReference.child("Group_List").child(catchID()).child("name");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                groupName = String.valueOf(dataSnapshot.getValue());
+            }
 
-        addtoggleBtn = findViewById(R.id.addmember_button);
-        sp = getSharedPreferences("FB_PROFILE", Context.MODE_PRIVATE);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        user = new ArrayList<>();
-        listView = findViewById(R.id.addmember_listview);
+            }
+        });
     }
 
     private void addMemberDialog(final UserDao dao, final String id) {
@@ -150,19 +172,7 @@ public class AddMemberActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void getGroupName() {
-        Query query = databaseReference.child("Group_List").child(catchID()).child("name");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                groupName = String.valueOf(dataSnapshot.getValue());
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+    ///////////////////////////////////////////////////////////////////////////////
 
 }

@@ -11,14 +11,10 @@ import com.facebook.login.widget.ProfilePictureView;
 
 import budgetapp.napkkk.ourbudget2.R;
 
-/**
- * Created by napkkk on 26/11/2560.
- */
 
 public class Incharge_View extends FrameLayout {
     private TextView tvProfilename;
     private ProfilePictureView profilePic;
-
 
 
     public Incharge_View(@NonNull Context context) {
@@ -39,8 +35,8 @@ public class Incharge_View extends FrameLayout {
         initInstances();
     }
 
-    public void initInflate(){
-        inflate(getContext(),R.layout.viewincharge_item,this);
+    public void initInflate() {
+        inflate(getContext(), R.layout.viewincharge_item, this);
     }
 
     private void initInstances() {

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,17 +17,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import budgetapp.napkkk.ourbudget2.R;
 import budgetapp.napkkk.ourbudget2.controller.InGroupActivity;
 import budgetapp.napkkk.ourbudget2.controller.adapter.InGroupAdapter;
-import budgetapp.napkkk.ourbudget2.R;
-import budgetapp.napkkk.ourbudget2.view.SwipeToDeleteListViewListener;
 import budgetapp.napkkk.ourbudget2.model.TransactionDao;
+import budgetapp.napkkk.ourbudget2.view.SwipeToDeleteListViewListener;
 
-/**
- * Created by napkkk on 24/11/2560.
- */
 
-public class INCOME_fragment extends android.support.v4.app.Fragment{
+public class INCOME_fragment extends android.support.v4.app.Fragment {
     private static final String TAG = "INCOME_FRAGMENT";
     DatabaseReference databaseReference;
     List<TransactionDao> transaction;
@@ -38,11 +34,10 @@ public class INCOME_fragment extends android.support.v4.app.Fragment{
     InGroupActivity activity;
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.income_fragment,container,false);
+        View view = inflater.inflate(R.layout.income_fragment, container, false);
 
         Bundle bundle = getArguments();
         ingroupid = bundle.getString("ingroupid");
@@ -75,7 +70,6 @@ public class INCOME_fragment extends android.support.v4.app.Fragment{
         listView.setOnTouchListener(swipeListener);
 
 
-
         return view;
     }
 
@@ -86,7 +80,7 @@ public class INCOME_fragment extends android.support.v4.app.Fragment{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 transaction.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    if(postSnapshot.getValue(TransactionDao.class).getIngroupid().equals(ingroupid)){
+                    if (postSnapshot.getValue(TransactionDao.class).getIngroupid().equals(ingroupid)) {
                         TransactionDao dao = postSnapshot.getValue(TransactionDao.class);
                         transaction.add(dao);
                     }

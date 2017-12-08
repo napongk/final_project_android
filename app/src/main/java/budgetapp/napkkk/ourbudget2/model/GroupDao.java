@@ -2,9 +2,6 @@ package budgetapp.napkkk.ourbudget2.model;
 
 import java.util.HashMap;
 
-/**
- * Created by napkkk on 21/11/2560.
- */
 
 public class GroupDao {
     private String groupid, type, name, time, owner, money, target, description;

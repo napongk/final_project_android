@@ -1,18 +1,13 @@
 package budgetapp.napkkk.ourbudget2.controller;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +26,6 @@ import budgetapp.napkkk.ourbudget2.model.UserDao;
 public class ViewMemberActivity extends AppCompatActivity {
 
     DatabaseReference databaseReference;
-    SharedPreferences sp;
     List<UserDao> user;
     ListView listView;
     UserAdapter adapter;
@@ -40,7 +34,7 @@ public class ViewMemberActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewmember_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("สมาชิก");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,6 +44,8 @@ public class ViewMemberActivity extends AppCompatActivity {
         getQuery();
 
     }
+
+    ////////////////////// Menu initialize /////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,8 +64,12 @@ public class ViewMemberActivity extends AppCompatActivity {
                 return true;
         }
 
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
+
+    /////////////////////////////////////////////////////////////////////////
+
+    //////////////////// initialize & setup /////////////////////////////////
 
     private void initFirebase() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -77,21 +77,35 @@ public class ViewMemberActivity extends AppCompatActivity {
 
     private String catchID() {
         Bundle bundle = getIntent().getExtras();
-        return bundle.getString("groupID");
+        if (bundle != null) {
+            return bundle.getString("groupID");
+        }
+        return null;
     }
+
+    private void initInstance() {
+        user = new ArrayList<>();
+        View content = findViewById(R.id.member_content);
+
+        listView = content.findViewById(R.id.member_listview);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////// Firebase Query ////////////////////////////////
 
     private void getQuery() {
         Query query = databaseReference.child("Group_List").child(catchID()).child("inmember");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    user.clear();
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        UserDao userDao = postSnapshot.getValue(UserDao.class);
-                        user.add(userDao);
-                    }
-                    adapter = new UserAdapter(user);
-                    listView.setAdapter(adapter);
+                user.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserDao userDao = postSnapshot.getValue(UserDao.class);
+                    user.add(userDao);
+                }
+                adapter = new UserAdapter(user);
+                listView.setAdapter(adapter);
             }
 
             @Override
@@ -102,20 +116,13 @@ public class ViewMemberActivity extends AppCompatActivity {
     }
 
 
-    private void initInstance(){
-        user = new ArrayList<>();
-        View content = findViewById(R.id.member_content);
-
-        listView = content.findViewById(R.id.member_listview);
-    }
-
-    private void goAddmember(){
+    private void goAddmember() {
         Intent intent = new Intent(ViewMemberActivity.this, AddMemberActivity.class);
         intent.putExtra("groupID", catchID());
         startActivity(intent);
     }
 
-
+    /////////////////////////////////////////////////////////////////////////////////
 
 
 }
